@@ -397,7 +397,7 @@ dialog.lb.closing::backdrop { animation: fadeOut 0.25s ease-in both; }
 @keyframes pickopt { 0%, 22% { border-color: var(--color-coral); transform: translateY(-3px); } 26%, 100% { border-color: var(--color-line); transform: none; } }
 
 /* ---------- facts ---------- */
-.fact { transition: transform 0.35s var(--ease-out-soft), border-color 0.3s; }
+.fact { cursor: pointer; transition: transform 0.35s var(--ease-out-soft), border-color 0.3s; }
 .fact:hover { transform: translateY(-5px); border-color: var(--color-muted); }
 
 @media (max-width: 720px) {
