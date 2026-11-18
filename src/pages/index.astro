@@ -35,12 +35,66 @@ const facts = [
   { icon: 'ShieldCheck', k: 'checked', v: 'Text size, contrast, loop, speed and file size, every build.' },
   { icon: 'CirclePause', k: 'reduced motion', v: 'A still picture for people who turn motion off.' },
 ];
+
+const title = 'Jano · Animated GitHub README banner generator for Claude Code';
+const description =
+  'Jano is a Claude Code and Codex skill that draws your repo an animated SVG README banner, in dark and light mode, placed at the top of your README.';
+
+const faqs = [
+  {
+    q: 'How do I add a banner to my GitHub README?',
+    a: 'Install Jano, open your agent in the repository and run /jano. It writes the banner as two SVG files, one for dark mode and one for light, and adds it at the top of your README without touching the rest.',
+  },
+  {
+    q: 'What size should a GitHub README banner be?',
+    a: 'Jano draws every banner at 1280×640 (2:1), which fills the width of a README on GitHub. The text on it is big enough to read on a phone.',
+  },
+  {
+    q: 'How do I show one image in dark mode and another in light mode?',
+    a: 'GitHub picks the image with a <picture> element and a source for prefers-color-scheme: dark. Jano writes both files and that markup for you.',
+  },
+  {
+    q: 'Why an animated SVG and not a GIF?',
+    a: 'An SVG stays sharp at any width, usually weighs 60 to 130 KB and moves with CSS that GitHub plays as it is. Readers who turn motion off get a still frame. Jano makes SVG only, no GIFs or videos.',
+  },
+  {
+    q: 'Is Jano a README generator?',
+    a: 'No. Tools like readme-ai write README text, and most repo banner generators fill in a template. Jano reads your project and draws a README header that shows what it does; your own words stay as you wrote them.',
+  },
+  {
+    q: 'Which AI agents can run it?',
+    a: 'Claude Code, as a plugin or a skill, plus Codex, Cursor, Gemini CLI and the other agents the skills CLI supports.',
+  },
+];
+
+const jsonLd = {
+  '@context': 'https://schema.org',
+  '@graph': [
+    {
+      '@type': 'SoftwareApplication',
+      name: 'Jano',
+      url: 'https://jano.ilien.dev/',
+      description,
+      applicationCategory: 'DeveloperApplication',
+      operatingSystem: 'Windows, macOS, Linux',
+      license: 'https://opensource.org/licenses/MIT',
+      sameAs: 'https://github.com/ilien-dev/jano',
+      keywords: 'GitHub README banner, README header, animated SVG, dark mode, Claude Code skill',
+      offers: { '@type': 'Offer', price: '0', priceCurrency: 'USD' },
+    },
+    {
+      '@type': 'FAQPage',
+      mainEntity: faqs.map((f) => ({
+        '@type': 'Question',
+        name: f.q,
+        acceptedAnswer: { '@type': 'Answer', text: f.a },
+      })),
+    },
+  ],
+};
 ---
 
-<Layout
-  title="Jano: an animated SVG hero for your GitHub README"
-  description="Jano is an agent skill for Claude Code, Codex, Cursor and other AI agents. It draws your repository an animated SVG banner for GitHub's dark and light themes, already placed at the top of your README."
->
+<Layout title={title} description={description} jsonLd={jsonLd}>
   <div class="relative overflow-hidden">
     <header class="absolute inset-x-0 top-0 z-10">
       <nav aria-label="Main" class="mx-auto flex max-w-[1240px] flex-wrap items-center justify-between gap-4 px-6 py-5">
@@ -77,12 +131,12 @@ const facts = [
       <div class="veil-b"></div>
       <div class="absolute inset-0 flex items-center justify-center px-6 pt-24 pb-10">
         <div class="flex max-w-[900px] flex-col items-center gap-6 text-center">
-          <span class="rise inline-flex items-center gap-2 rounded-full border-[1.5px] border-line bg-deep px-4 py-2 font-mono text-sm text-body"><Icon name="Sparkles" size={16} class="text-hot" />Every banner here was drawn by Jano</span>
+          <span class="rise inline-flex items-center gap-2 rounded-full border-[1.5px] border-line bg-deep px-4 py-2 font-mono text-sm text-body"><Icon name="Sparkles" size={16} class="text-hot" />Animated SVG for GitHub · every banner here drawn by Jano</span>
           <h1 class="m-0 text-[clamp(46px,7vw,100px)] leading-[0.96] font-semibold tracking-[-0.03em]">
-            Your README, <span class="text-hot">on the wall.</span>
+            Your README banner, <span class="text-hot">on the wall.</span>
           </h1>
           <p class="rise m-0 max-w-[46ch] text-[clamp(18px,2vw,21px)] leading-normal text-body">
-            An agent skill that gives your repository an animated banner showing what it does, in dark and light mode, before anyone reads a word.
+            An agent skill that draws your GitHub repository an animated README banner showing what it does, in dark and light mode, before anyone reads a word.
           </p>
           <div class="rise flex flex-wrap justify-center gap-3" style="animation-delay:.12s">
             <a class="btn btn-pri" href="#install"><Icon name="Download" />Install in Claude Code <Icon name="ArrowRight" size={16} class="arr" /></a>
@@ -242,7 +296,7 @@ const facts = [
           <div class="mb-7 flex flex-wrap items-end justify-between gap-4">
             <div>
               <p class="eyebrow"><Icon name="Images" size={16} />Showroom</p>
-              <h2 class="m-0 text-[clamp(32px,4vw,52px)] font-semibold">Open a banner</h2>
+              <h2 class="m-0 text-[clamp(32px,4vw,52px)] font-semibold">README banners Jano drew for real projects</h2>
             </div>
             <p class="m-0 max-w-[40ch] text-lg text-body">Seven real projects. No two look alike, because no two projects do the same thing.</p>
           </div>
@@ -251,7 +305,7 @@ const facts = [
               projects.map((p, i) =>
                 i === 0 ? (
                   <button type="button" class="gcard gfeat col-span-full" data-open={i} aria-haspopup="dialog" aria-label={`Open the ${p.name} banner`}>
-                    <span class="gimg"><img src={`/banners/${p.slug}/hero-dark.svg`} data-banner={p.slug} alt="" width="1280" height="640" loading="lazy" decoding="async" /></span>
+                    <span class="gimg"><img src={`/banners/${p.slug}/hero-dark.svg`} data-banner={p.slug} alt={`${p.name} README banner: ${p.alt}`} width="1280" height="640" loading="lazy" decoding="async" /></span>
                     <span class="flex min-w-0 flex-col gap-3 pb-12">
                       <span class="inline-flex items-center gap-2 font-mono text-sm text-hot"><Icon name="Star" size={16} />Featured</span>
                       <span class="text-2xl font-semibold">{p.name}</span>
@@ -262,7 +316,7 @@ const facts = [
                   </button>
                 ) : (
                   <button type="button" class="gcard" data-open={i} aria-haspopup="dialog" aria-label={`Open the ${p.name} banner`}>
-                    <span class="gimg"><img src={`/banners/${p.slug}/hero-dark.svg`} data-banner={p.slug} alt="" width="1280" height="640" loading="lazy" decoding="async" /></span>
+                    <span class="gimg"><img src={`/banners/${p.slug}/hero-dark.svg`} data-banner={p.slug} alt={`${p.name} README banner: ${p.alt}`} width="1280" height="640" loading="lazy" decoding="async" /></span>
                     <span class="px-1.5 text-xl font-semibold">{p.name}</span>
                     <span class="px-1.5 pr-14 text-lg leading-snug text-body">{p.tag}</span>
                     <span class="ex" aria-hidden="true"><Icon name="Plus" size={18} /></span>
@@ -284,6 +338,35 @@ const facts = [
               </div>
             ))
           }
+        </section>
+
+        <!-- Name -->
+        <section id="name" aria-labelledby="why" class="reveal flex flex-wrap items-center gap-10 pt-10 pb-24">
+          <div class="min-w-0 flex-[1_1_340px]">
+            <p class="eyebrow"><Icon name="Landmark" size={16} />The name</p>
+            <h2 id="why" class="m-0 text-[clamp(32px,4vw,52px)] leading-[1.05] font-semibold">Why Jano?</h2>
+          </div>
+          <div class="flex min-w-0 flex-[1.4_1_520px] flex-col gap-4 text-lg leading-relaxed text-body">
+            <p class="m-0">Jano is the Spanish name of Janus, the Roman god of doors, passages and beginnings. He is drawn with two faces looking opposite ways, and January is named after him.</p>
+            <p class="m-0">A README banner is the door to a repository, the first thing anyone sees. Jano draws it with two faces too: one for GitHub's dark theme and one for light.</p>
+            <p class="m-0">The other projects in the gallery have names from mythology too, as every project by the same author does.</p>
+          </div>
+        </section>
+
+        <!-- FAQ -->
+        <section id="faq" aria-labelledby="faq-title" class="reveal pt-10 pb-28">
+          <p class="eyebrow"><Icon name="MessageCircleQuestion" size={16} />Questions</p>
+          <h2 id="faq-title" class="m-0 mb-7 text-[clamp(32px,4vw,52px)] leading-[1.05] font-semibold">README banners, answered</h2>
+          <div class="grid grid-cols-[repeat(auto-fit,minmax(320px,1fr))] gap-4">
+            {
+              faqs.map((f) => (
+                <div class="win p-6">
+                  <h3 class="m-0 mb-2.5 text-xl leading-snug font-semibold">{f.q}</h3>
+                  <p class="m-0 text-lg leading-relaxed text-body">{f.a}</p>
+                </div>
+              ))
+            }
+          </div>
         </section>
 
         <footer class="flex flex-wrap justify-between gap-3 border-t-[1.5px] border-line pt-7 pb-12 text-[15px] text-muted">
