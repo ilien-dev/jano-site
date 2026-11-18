@@ -59,10 +59,11 @@ export const projects: Project[] = [
   },
 ];
 
+// Brand marks from Lobe Icons (MIT), used to name the agents Jano runs in.
 export const agents = [
-  { m: 'CC', name: 'Claude Code', note: 'plugin', hot: true, href: '#install' },
-  { m: 'Cx', name: 'Codex', note: 'skill', hot: false, href: '#install' },
-  { m: 'Cu', name: 'Cursor', note: 'skill', hot: false, href: '#install' },
-  { m: 'Ge', name: 'Gemini CLI', note: 'skill', hot: false, href: '#install' },
-  { m: '+', name: 'More agents', note: 'skills.sh', hot: false, href: 'https://skills.sh' },
+  { logo: '/logos/claude.svg', name: 'Claude Code', note: 'plugin', hot: true, href: '#install' },
+  { logo: '/logos/chatgpt.svg', name: 'Codex', note: 'skill', hot: false, href: '#install' },
+  { logo: '/logos/cursor.svg', name: 'Cursor', note: 'skill', hot: false, href: '#install' },
+  { logo: '/logos/gemini.svg', name: 'Gemini CLI', note: 'skill', hot: false, href: '#install' },
+  { logo: '', name: 'More agents', note: 'skills.sh', hot: false, href: 'https://skills.sh' },
 ];

@@ -111,14 +111,71 @@ const cmds = {
         </section>
       </div>
 
+      <!-- How to use -->
+      <div class="relative mx-auto max-w-[1240px] px-6">
+        <section id="use" aria-labelledby="use-h" class="reveal pb-20">
+          <div class="mb-8 flex flex-wrap items-end justify-between gap-6">
+            <div class="max-w-[640px]">
+              <p class="m-0 mb-3 font-mono text-[15px] text-hot">How to use</p>
+              <h2 id="use-h" class="m-0 text-[clamp(32px,4vw,52px)] leading-[1.05] font-semibold">One hero, or four to choose from.</h2>
+            </div>
+            <p class="m-0 max-w-[44ch] text-lg leading-relaxed text-body">
+              Open your agent in the project and call Jano: <code class="font-mono text-[0.9em] text-ink">/jano</code> in Claude Code
+              (<code class="font-mono text-[0.9em] text-ink">/jano:jano</code> as a plugin), <code class="font-mono text-[0.9em] text-ink">$jano</code> in Codex.
+            </p>
+          </div>
+          <div class="grid grid-cols-[repeat(auto-fit,minmax(min(100%,480px),1fr))] gap-5">
+            <article class="win use-card flex flex-col">
+              <div class="winbar"><span class="lite"></span><span class="lite"></span><span class="lite"></span><span class="ml-2">01 · One hero</span></div>
+              <div class="flex flex-1 flex-col gap-5 p-[22px]">
+                <div class="uviz" aria-hidden="true">
+                  <div class="mini mini-one">
+                    <span class="mt"><i class="dw" style="width:30%"></i><i class="dw hot" style="width:70%;animation-delay:.25s"></i><i class="dw thin" style="width:85%;animation-delay:.5s"></i><i class="dw thin" style="width:60%;animation-delay:.65s"></i></span>
+                    <span class="mp dw" style="animation-delay:.9s"><span class="mdot"></span></span>
+                  </div>
+                </div>
+                <div class="cmd wrap"><code>/jano make a hero for this repository</code><button type="button" class="copy" data-copy="/jano make a hero for this repository" aria-label="Copy the one-hero prompt">Copy</button></div>
+                <p class="m-0 text-base leading-relaxed text-body">Jano reads the project, draws the banner, checks it and places it at the top of your README.</p>
+              </div>
+            </article>
+            <article class="win use-card flex flex-col">
+              <div class="winbar"><span class="lite"></span><span class="lite"></span><span class="lite"></span><span class="ml-2">02 · Four to choose from</span></div>
+              <div class="flex flex-1 flex-col gap-5 p-[22px]">
+                <div class="uviz" aria-hidden="true">
+                  <div class="opts">
+                    <div class="mini opt" style="animation-delay:0s"><b>A</b><span class="mt"><i style="width:40%"></i><i class="hot" style="width:75%"></i><i class="thin" style="width:80%"></i></span><span class="mp"></span></div>
+                    <div class="mini opt" style="animation-delay:-6s;flex-direction:row-reverse"><b>B</b><span class="mt"><i style="width:40%"></i><i class="hot" style="width:75%"></i><i class="thin" style="width:80%"></i></span><span class="mp"><span class="mdot"></span></span></div>
+                    <div class="mini opt" style="animation-delay:-4s;flex-direction:column"><b>C</b><span class="mt"><i class="hot" style="width:60%"></i><i class="thin" style="width:90%"></i></span><span class="mp" style="width:100%"></span></div>
+                    <div class="mini opt" style="animation-delay:-2s"><b>D</b><span class="mp"></span><span class="mt"><i style="width:50%"></i><i class="hot" style="width:85%"></i><i class="thin" style="width:70%"></i></span></div>
+                  </div>
+                </div>
+                <div class="cmd wrap"><code>/jano make 4 alternatives for this repository's hero</code><button type="button" class="copy" data-copy="/jano make 4 alternatives for this repository's hero" aria-label="Copy the four-alternatives prompt">Copy</button></div>
+                <p class="m-0 text-base leading-relaxed text-body">The options open side by side on one page. Keep one, or mix them: "the picture of B with the layout of C". The README changes only after you choose.</p>
+              </div>
+            </article>
+          </div>
+          <div class="mt-5 flex flex-wrap items-center gap-x-6 gap-y-3 rounded-[18px] border-[1.5px] border-line bg-deep p-[18px]">
+            <span class="font-mono text-sm text-hot">Say what you want to see</span>
+            <div class="cmd wrap min-w-0 flex-[1_1_100%]"><code>/jano show a book turning into an EPUB, keep our yellow</code><button type="button" class="copy" data-copy="/jano show a book turning into an EPUB, keep our yellow" aria-label="Copy the example prompt">Copy</button></div>
+            <span class="text-sm text-muted">Jano never runs unless you call it, and it commits nothing.</span>
+          </div>
+        </section>
+      </div>
+
       <!-- Works with -->
-      <section aria-labelledby="works" class="mqw relative overflow-hidden pb-24">
+      <section aria-labelledby="works" class="mqw relative overflow-hidden pt-3 pb-24">
         <h2 id="works" class="sr-only">Works with</h2>
         <div class="mq">
           {
             agentLoop.map((g, i) => (
               <a class="agent" href={g.href} aria-hidden={i >= agents.length ? 'true' : undefined} tabindex={i >= agents.length ? -1 : undefined}>
-                <span class="m" aria-hidden="true">{g.m}</span>
+                <span class="m" aria-hidden="true">
+                  {g.logo ? (
+                    <img src={g.logo} alt="" width="24" height="24" loading="lazy" decoding="async" />
+                  ) : (
+                    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#EEF2F7" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7" rx="2" /><rect x="14" y="3" width="7" height="7" rx="2" /><rect x="3" y="14" width="7" height="7" rx="2" /><path d="M17.5 14v7M14 17.5h7" /></svg>
+                  )}
+                </span>
                 <span class="font-semibold">{g.name}</span>
                 <span class={`font-mono text-xs ${g.hot ? 'text-hot' : 'text-muted'}`}>{g.note}</span>
               </a>
@@ -168,12 +225,25 @@ const cmds = {
           <div class="grid grid-cols-[repeat(auto-fill,minmax(300px,1fr))] gap-4">
             {
               projects.map((p, i) => (
-                <button type="button" class={i === 0 ? "gcard col-span-full" : "gcard"} data-open={i} aria-haspopup="dialog" aria-label={`Open the ${p.name} banner`}>
-                  <img src={`/banners/${p.slug}/hero-dark.svg`} alt="" width="1280" height="640" loading="lazy" decoding="async" />
-                  <span class={`px-1.5 font-semibold ${i === 0 ? "text-2xl" : "text-xl"}`}>{p.name}</span>
-                  <span class="px-1.5 pr-14 text-lg leading-snug text-body">{p.tag}</span>
-                  <span class="ex" aria-hidden="true">+</span>
-                </button>
+                i === 0 ? (
+                  <button type="button" class="gcard gfeat col-span-full" data-open={i} aria-haspopup="dialog" aria-label={`Open the ${p.name} banner`}>
+                    <span class="gimg"><img src={`/banners/${p.slug}/hero-dark.svg`} alt="" width="1280" height="640" loading="lazy" decoding="async" /></span>
+                    <span class="flex min-w-0 flex-col gap-3 pb-12">
+                      <span class="font-mono text-sm text-hot">Featured</span>
+                      <span class="text-2xl font-semibold">{p.name}</span>
+                      <span class="text-[clamp(22px,2.4vw,30px)] leading-tight font-semibold">{p.tag}</span>
+                      <span class="text-base leading-relaxed text-body">{p.alt}</span>
+                    </span>
+                    <span class="ex" aria-hidden="true">+</span>
+                  </button>
+                ) : (
+                  <button type="button" class="gcard" data-open={i} aria-haspopup="dialog" aria-label={`Open the ${p.name} banner`}>
+                    <span class="gimg"><img src={`/banners/${p.slug}/hero-dark.svg`} alt="" width="1280" height="640" loading="lazy" decoding="async" /></span>
+                    <span class="px-1.5 text-xl font-semibold">{p.name}</span>
+                    <span class="px-1.5 pr-14 text-lg leading-snug text-body">{p.tag}</span>
+                    <span class="ex" aria-hidden="true">+</span>
+                  </button>
+                )
               ))
             }
           </div>
