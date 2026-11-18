@@ -9,6 +9,8 @@ interface Props {
   lang?: 'en' | 'es';
   locale?: string;
   ogImageAlt?: string;
+  // A page with no other-language twin (the 404s): no hreflang links, and kept out of search results.
+  standalone?: boolean;
 }
 
 const {
@@ -18,7 +20,9 @@ const {
   lang,
   locale = 'en_US',
   ogImageAlt = 'Jano: animated GitHub README banners for dark and light mode.',
+  standalone = false,
 } = Astro.props;
+const twins = lang && !standalone;
 const site = 'https://jano.ilien.dev';
 const canonical = new URL(Astro.url.pathname, site).href;
 ---
@@ -32,7 +36,7 @@ const canonical = new URL(Astro.url.pathname, site).href;
     <meta name="description" content={description} />
     <link rel="canonical" href={canonical} />
     {
-      lang && (
+      twins && (
         <>
           <link rel="alternate" hreflang="en" href={`${site}/`} />
           <link rel="alternate" hreflang="es" href={`${site}/es/`} />
@@ -60,7 +64,8 @@ const canonical = new URL(Astro.url.pathname, site).href;
     <meta property="og:type" content="website" />
     <meta property="og:site_name" content="Jano" />
     <meta property="og:locale" content={locale} />
-    {lang && <meta property="og:locale:alternate" content={locale === 'es_ES' ? 'en_US' : 'es_ES'} />}
+    {standalone && <meta name="robots" content="noindex" />}
+    {twins && <meta property="og:locale:alternate" content={locale === 'es_ES' ? 'en_US' : 'es_ES'} />}
     <meta property="og:url" content={canonical} />
     <meta property="og:title" content={title} />
     <meta property="og:description" content={description} />
