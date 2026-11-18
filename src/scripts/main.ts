@@ -9,6 +9,10 @@ interface Project {
 const $ = <T extends Element = HTMLElement>(sel: string, root: ParentNode = document) => root.querySelector<T>(sel);
 const $$ = <T extends Element = HTMLElement>(sel: string, root: ParentNode = document) => Array.from(root.querySelectorAll<T>(sel));
 const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+const es = document.documentElement.lang === 'es';
+const T = es
+  ? { copy: 'Copiar', copied: 'Copiado', bannerAlt: 'Banner del README de' }
+  : { copy: 'Copy', copied: 'Copied', bannerAlt: 'README banner' };
 
 /* ---------- theme: light, dark or follow the system ---------- */
 type Choice = 'light' | 'dark' | 'system';
@@ -54,7 +58,8 @@ function applyTheme() {
   const c = choice();
   const t = resolved();
   if (tsw) tsw.dataset.choice = c;
-  tmBtn?.setAttribute('aria-label', `Theme: ${c[0].toUpperCase()}${c.slice(1)}`);
+  const name = tswBtns.find((b) => b.dataset.themeChoice === c)?.textContent?.trim() ?? c;
+  tmBtn?.setAttribute('aria-label', `${tmBtn.dataset.label ?? 'Theme'}: ${name}`);
   for (const b of tswBtns) b.setAttribute('aria-checked', String(b.dataset.themeChoice === c));
   for (const m of $$<HTMLMetaElement>('meta[name="theme-color"]')) {
     // With no choice, each meta keeps its own media query; a choice pins both.
@@ -113,13 +118,13 @@ for (const btn of $$<HTMLButtonElement>('[data-copy]')) {
       /* clipboard blocked: still show feedback */
     }
     const lbl = btn.querySelector('.lbl');
-    if (lbl) lbl.textContent = 'Copied';
+    if (lbl) lbl.textContent = T.copied;
     btn.classList.remove('done');
     void btn.offsetWidth;
     btn.classList.add('done');
     window.clearTimeout(timer);
     timer = window.setTimeout(() => {
-      if (lbl) lbl.textContent = 'Copy';
+      if (lbl) lbl.textContent = T.copy;
       btn.classList.remove('done');
     }, 1600);
   });
@@ -205,7 +210,7 @@ function render(animate: boolean) {
   const p = projects[cur];
   if (!p || !img) return;
   img.src = `/banners/${p.slug}/hero-${mode}.svg`;
-  img.alt = `${p.name} README banner: ${p.alt}`;
+  img.alt = es ? `${T.bannerAlt} ${p.name}: ${p.alt}` : `${p.name} ${T.bannerAlt}: ${p.alt}`;
   $('#lb-title')!.textContent = p.name;
   $('#lb-tag')!.textContent = p.tag;
   $('#lb-file')!.textContent = `${p.slug} / hero-${mode}.svg`;

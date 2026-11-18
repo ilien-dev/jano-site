@@ -6,10 +6,11 @@ interface Props {
   label: string;
   wrap?: boolean;
   prefix?: string;
+  copy?: string;
   class?: string;
 }
 
-const { text, label, wrap = false, prefix, class: cls = '' } = Astro.props;
+const { text, label, wrap = false, prefix, copy = 'Copy', class: cls = '' } = Astro.props;
 
 // The parts that name the skill get the accent: /jano, /jano:jano, $jano, ilien-dev/jano, jano@jano.
 // The command itself (/plugin, npx) gets a second, cooler accent and no underline.
@@ -27,6 +28,6 @@ const parts = text
   <button type="button" class="copy" data-copy={text} aria-label={label}>
     <Icon name="Copy" size={16} class="i-copy" />
     <Icon name="Check" size={16} class="i-done" />
-    <span class="lbl">Copy</span>
+    <span class="lbl">{copy}</span>
   </button>
 </div>
