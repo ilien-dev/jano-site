@@ -10,6 +10,54 @@ const $ = <T extends Element = HTMLElement>(sel: string, root: ParentNode = docu
 const $$ = <T extends Element = HTMLElement>(sel: string, root: ParentNode = document) => Array.from(root.querySelectorAll<T>(sel));
 const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
+/* ---------- theme: light, dark or follow the system ---------- */
+type Choice = 'light' | 'dark' | 'system';
+const sysLight = window.matchMedia('(prefers-color-scheme: light)');
+const root = document.documentElement;
+const tsw = $('#tsw');
+const tswBtns = $$<HTMLButtonElement>('[data-theme-choice]');
+const choice = (): Choice => (root.dataset.theme === 'light' || root.dataset.theme === 'dark' ? root.dataset.theme : 'system');
+const resolved = (): 'light' | 'dark' => {
+  const c = choice();
+  return c === 'system' ? (sysLight.matches ? 'light' : 'dark') : c;
+};
+function applyTheme() {
+  const c = choice();
+  const t = resolved();
+  if (tsw) tsw.dataset.choice = c;
+  for (const b of tswBtns) b.setAttribute('aria-pressed', String(b.dataset.themeChoice === c));
+  for (const m of $$<HTMLMetaElement>('meta[name="theme-color"]')) {
+    // With no choice, each meta keeps its own media query; a choice pins both.
+    m.content = c === 'system' ? (m.media.includes('light') ? '#F4F6FA' : '#0A1020') : t === 'light' ? '#F4F6FA' : '#0A1020';
+  }
+  for (const im of $$<HTMLImageElement>('img[data-banner]')) {
+    const src = `/banners/${im.dataset.banner}/hero-${t}.svg`;
+    if (!im.src.endsWith(src)) im.src = src;
+  }
+}
+for (const b of tswBtns) {
+  b.addEventListener('click', () => {
+    const c = (b.dataset.themeChoice ?? 'system') as Choice;
+    if (c === 'system') delete root.dataset.theme;
+    else root.dataset.theme = c;
+    try {
+      if (c === 'system') localStorage.removeItem('theme');
+      else localStorage.setItem('theme', c);
+    } catch {
+      /* storage blocked: the choice lasts for this visit */
+    }
+    applyTheme();
+  });
+}
+sysLight.addEventListener('change', () => {
+  applyTheme();
+  if (dlg?.open) {
+    mode = resolved();
+    render(false);
+  }
+});
+applyTheme();
+
 /* ---------- wall: load the banners after the page is up ---------- */
 function loadWall() {
   // Load every tile at once: the copies scroll in from clipped edges, and an
@@ -157,6 +205,7 @@ function closeDialog() {
 for (const card of $$<HTMLButtonElement>('[data-open]')) {
   card.addEventListener('click', () => {
     cur = Number(card.dataset.open);
+    mode = resolved();
     render(false);
     dlg?.showModal();
   });

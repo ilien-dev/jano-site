@@ -1,0 +1,20 @@
+---
+import Icon from './Icon.astro';
+
+const options = [
+  { value: 'light', icon: 'Sun', label: 'Light theme' },
+  { value: 'dark', icon: 'Moon', label: 'Dark theme' },
+  { value: 'system', icon: 'Monitor', label: 'Follow the system theme' },
+];
+---
+
+<div class="tsw" role="group" aria-label="Theme" data-choice="system" id="tsw">
+  <span class="knob" aria-hidden="true"></span>
+  {
+    options.map((o) => (
+      <button type="button" data-theme-choice={o.value} aria-pressed={o.value === 'system' ? 'true' : 'false'} aria-label={o.label} title={o.label}>
+        <Icon name={o.icon} size={17} />
+      </button>
+    ))
+  }
+</div>

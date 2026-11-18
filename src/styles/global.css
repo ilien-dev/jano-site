@@ -30,14 +30,67 @@
   --color-muted: #8696b8;
   --color-coral: #e8553d;
   --color-hot: #ff8469;
+  --color-bar: #3a4a70;
   --ease-out-soft: cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+
+/* ---------- themes ----------
+   Dark is the default. A visitor's choice sits in <html data-theme>; without one the
+   page follows the system. The light palette comes from the light Jano banner. */
+:root {
+  --color-cv: #8fb4ff;
+  --color-pri-hover: #fff;
+  --color-chip: #1b2a4a;
+  --color-on-fill: #0a1020;
+  --color-fill: #e8553d;
+  --backdrop: rgb(10 16 32 / 0.88);
+  color-scheme: dark;
+}
+:root[data-theme="light"] {
+  --color-night: #f4f6fa;
+  --color-deep: #ffffff;
+  --color-panel: #dfe5ef;
+  --color-panel2: #eaeff5;
+  --color-line: #c5d0e0;
+  --color-dots: #d6deea;
+  --color-ink: #1b2a4a;
+  --color-body: #3f4f73;
+  --color-muted: #5a6a8c;
+  --color-hot: #b4381f;
+  --color-bar: #a9b6cc;
+  --color-cv: #2f58c4;
+  --color-pri-hover: #0a1020;
+  --color-on-fill: #fff;
+  --color-fill: #b4381f;
+  --backdrop: rgb(27 42 74 / 0.55);
+  color-scheme: light;
+}
+@media (prefers-color-scheme: light) {
+  :root:not([data-theme="dark"]) {
+    --color-night: #f4f6fa;
+    --color-deep: #ffffff;
+    --color-panel: #dfe5ef;
+    --color-panel2: #eaeff5;
+    --color-line: #c5d0e0;
+    --color-dots: #d6deea;
+    --color-ink: #1b2a4a;
+    --color-body: #3f4f73;
+    --color-muted: #5a6a8c;
+    --color-hot: #b4381f;
+    --color-bar: #a9b6cc;
+    --color-cv: #2f58c4;
+    --color-pri-hover: #0a1020;
+    --color-on-fill: #fff;
+    --color-fill: #b4381f;
+    --backdrop: rgb(27 42 74 / 0.55);
+    color-scheme: light;
+  }
 }
 
 @layer base {
   html {
     scroll-behavior: smooth;
     background: var(--color-night);
-    color-scheme: dark;
   }
   body {
     margin: 0;
@@ -150,7 +203,7 @@
 .btn .arr { display: inline-block; transition: transform 0.28s var(--ease-out-soft); }
 .btn:hover .arr { transform: translateX(5px); }
 .btn-pri { background: var(--color-ink); color: var(--color-night); border-color: var(--color-ink); }
-.btn-pri:hover { background: #fff; color: var(--color-night); border-color: #fff; }
+.btn-pri:hover { background: var(--color-pri-hover); color: var(--color-night); border-color: var(--color-pri-hover); }
 .btn[aria-pressed="true"] { background: var(--color-ink); color: var(--color-night); border-color: var(--color-ink); }
 
 /* ---------- segmented tabs ---------- */
@@ -248,7 +301,7 @@
 .copy.done .i-done { display: block; }
 .copy:hover .i-copy { transform: translateY(-1px) rotate(-6deg); }
 .copy .icon { transition: transform 0.25s var(--ease-out-soft); }
-.copy.done { background: var(--color-coral); border-color: var(--color-coral); color: var(--color-night); animation: pop 0.4s var(--ease-out-soft); }
+.copy.done { background: var(--color-fill); border-color: var(--color-fill); color: var(--color-on-fill); animation: pop 0.4s var(--ease-out-soft); }
 @keyframes pop { 0% { transform: scale(0.85); } 60% { transform: scale(1.08); } 100% { transform: scale(1); } }
 
 /* ---------- agents marquee ---------- */
@@ -271,7 +324,7 @@
 }
 .agent:hover { transform: translateY(-4px); border-color: var(--color-coral); color: var(--color-ink); }
 .agent:active { transform: scale(0.95); }
-.agent .m { width: 40px; height: 40px; border-radius: 50%; background: var(--color-panel); display: flex; align-items: center; justify-content: center; transition: transform 0.5s var(--ease-out-soft); }
+.agent .m { width: 40px; height: 40px; border-radius: 50%; background: var(--color-chip); color: #eef2f7; display: flex; align-items: center; justify-content: center; transition: transform 0.5s var(--ease-out-soft); }
 .agent:hover .m { transform: rotate(-10deg); }
 .agent .m img { display: block; width: 22px; height: 22px; }
 
@@ -327,7 +380,7 @@ dialog.lb {
   overflow: auto;
   overscroll-behavior: contain;
 }
-dialog.lb::backdrop { background: rgb(10 16 32 / 0.88); }
+dialog.lb::backdrop { background: var(--backdrop); }
 dialog.lb[open] { animation: zoomIn 0.5s var(--ease-out-soft) both; }
 dialog.lb[open]::backdrop { animation: fadeIn 0.35s ease both; }
 dialog.lb.closing { animation: zoomOut 0.25s ease-in both; }
@@ -367,7 +420,23 @@ dialog.lb.closing::backdrop { animation: fadeOut 0.25s ease-in both; }
 .seg button:hover .tab-logo, .seg button:hover .tab-npm { transform: rotate(-12deg) scale(1.1); }
 .cmd-pre { flex: none; min-width: 14px; font: 500 15px var(--font-mono); color: var(--color-muted); }
 .sk { color: var(--color-hot); font-weight: 600; }
-.cv { color: #8fb4ff; font-weight: 600; }
+.cv { color: var(--color-cv); font-weight: 600; }
+
+/* ---------- theme switch ---------- */
+.tsw { position: relative; display: flex; gap: 2px; padding: 3px; border-radius: 12px; background: var(--color-panel2); border: 1.5px solid var(--color-line); }
+.tsw button { position: relative; z-index: 1; width: 34px; height: 35px; display: inline-flex; align-items: center; justify-content: center; border: 0; border-radius: 9px; background: transparent; color: var(--color-body); cursor: pointer; transition: color 0.3s, transform 0.25s var(--ease-out-soft); }
+.tsw button:hover { color: var(--color-ink); }
+.tsw button:active { transform: scale(0.9); }
+.tsw button[aria-pressed="true"] { color: var(--color-night); }
+.tsw .knob { position: absolute; top: 3px; left: 3px; width: 34px; height: 35px; border-radius: 9px; background: var(--color-ink); transition: transform 0.45s cubic-bezier(0.6, 0, 0.2, 1.2); }
+.tsw[data-choice="dark"] .knob { transform: translateX(36px); }
+.tsw[data-choice="system"] .knob { transform: translateX(72px); }
+.tsw button:hover .icon { transform: rotate(-12deg); }
+.tsw .icon { transition: transform 0.35s var(--ease-out-soft); }
+@media (max-width: 639px) {
+  .btn-gh { width: 44px; padding: 0; justify-content: center; }
+  .btn-gh .gh-t, .btn-gh .arr, .btn-show { display: none; }
+}
 .cmd .sk { position: relative; }
 .cmd .sk::after { content: ''; position: absolute; left: 0; right: 0; bottom: -3px; height: 2px; border-radius: 1px; background: var(--color-coral); transform: scaleX(0); transform-origin: 0 50%; transition: transform 0.35s var(--ease-out-soft); }
 .cmd:hover .sk::after { transform: scaleX(1); }

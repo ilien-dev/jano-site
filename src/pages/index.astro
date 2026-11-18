@@ -3,6 +3,7 @@ import Layout from '../layouts/Layout.astro';
 import Logo from '../components/Logo.astro';
 import Icon from '../components/Icon.astro';
 import Cmd from '../components/Cmd.astro';
+import ThemeSwitch from '../components/ThemeSwitch.astro';
 import { projects, agents } from '../data/projects';
 
 // Each half of a column must be taller than the column (1500px, ~202px per tile),
@@ -41,8 +42,9 @@ const facts = [
           <span class="text-[22px] font-semibold">Jano</span>
         </a>
         <div class="flex items-center gap-3">
-          <a class="btn btn-sm hidden sm:inline-flex" href="#gallery"><Icon name="LayoutGrid" />Showroom</a>
-          <a class="btn btn-sm" href="https://github.com/ilien-dev/jano"><Icon name="github" />GitHub <Icon name="ArrowUpRight" size={16} class="arr" /></a>
+          <a class="btn btn-sm btn-show" href="#gallery"><Icon name="LayoutGrid" />Showroom</a>
+          <ThemeSwitch />
+          <a class="btn btn-sm btn-gh" href="https://github.com/ilien-dev/jano" aria-label="GitHub"><Icon name="github" /><span class="gh-t">GitHub</span> <Icon name="ArrowUpRight" size={16} class="arr" /></a>
         </div>
       </nav>
     </header>
@@ -208,7 +210,7 @@ const facts = [
             <div class="flex min-h-[460px] flex-col gap-3.5 p-[22px]">
               <div class="ba-banner">
                 <div>
-                  <img src="/banners/jano/hero-dark.svg" alt="The Jano banner: a poster is drawn part by part, checked and saved for dark and light." width="1280" height="640" loading="lazy" decoding="async" class="block h-auto w-full rounded-xl border-[1.5px] border-line" />
+                  <img src="/banners/jano/hero-dark.svg" data-banner="jano" alt="The Jano banner: a poster is drawn part by part, checked and saved for dark and light." width="1280" height="640" loading="lazy" decoding="async" class="block h-auto w-full rounded-xl border-[1.5px] border-line" />
                 </div>
               </div>
               <div class="text-[30px] font-semibold">Jano</div>
@@ -216,7 +218,7 @@ const facts = [
               <span class="h-2 w-[94%] rounded bg-line" aria-hidden="true"></span>
               <span class="h-2 w-[88%] rounded bg-line" aria-hidden="true"></span>
               <span class="h-2 w-[60%] rounded bg-line" aria-hidden="true"></span>
-              <span class="mt-2.5 h-4 w-[30%] rounded bg-[#3A4A70]" aria-hidden="true"></span>
+              <span class="mt-2.5 h-4 w-[30%] rounded bg-bar" aria-hidden="true"></span>
               <span class="h-2 w-[90%] rounded bg-line" aria-hidden="true"></span>
               <span class="h-2 w-[74%] rounded bg-line" aria-hidden="true"></span>
             </div>
@@ -237,7 +239,7 @@ const facts = [
               projects.map((p, i) =>
                 i === 0 ? (
                   <button type="button" class="gcard gfeat col-span-full" data-open={i} aria-haspopup="dialog" aria-label={`Open the ${p.name} banner`}>
-                    <span class="gimg"><img src={`/banners/${p.slug}/hero-dark.svg`} alt="" width="1280" height="640" loading="lazy" decoding="async" /></span>
+                    <span class="gimg"><img src={`/banners/${p.slug}/hero-dark.svg`} data-banner={p.slug} alt="" width="1280" height="640" loading="lazy" decoding="async" /></span>
                     <span class="flex min-w-0 flex-col gap-3 pb-12">
                       <span class="inline-flex items-center gap-2 font-mono text-sm text-hot"><Icon name="Star" size={16} />Featured</span>
                       <span class="text-2xl font-semibold">{p.name}</span>
@@ -248,7 +250,7 @@ const facts = [
                   </button>
                 ) : (
                   <button type="button" class="gcard" data-open={i} aria-haspopup="dialog" aria-label={`Open the ${p.name} banner`}>
-                    <span class="gimg"><img src={`/banners/${p.slug}/hero-dark.svg`} alt="" width="1280" height="640" loading="lazy" decoding="async" /></span>
+                    <span class="gimg"><img src={`/banners/${p.slug}/hero-dark.svg`} data-banner={p.slug} alt="" width="1280" height="640" loading="lazy" decoding="async" /></span>
                     <span class="px-1.5 text-xl font-semibold">{p.name}</span>
                     <span class="px-1.5 pr-14 text-lg leading-snug text-body">{p.tag}</span>
                     <span class="ex" aria-hidden="true"><Icon name="Plus" size={18} /></span>
