@@ -16,6 +16,35 @@ const sysLight = window.matchMedia('(prefers-color-scheme: light)');
 const root = document.documentElement;
 const tsw = $('#tsw');
 const tswBtns = $$<HTMLButtonElement>('[data-theme-choice]');
+const tmBtn = $<HTMLButtonElement>('#tm-btn');
+function setMenu(open: boolean, focusBtn = false) {
+  if (!tsw || !tmBtn) return;
+  tsw.dataset.menu = open ? 'open' : 'closed';
+  tmBtn.setAttribute('aria-expanded', String(open));
+  if (open) (tswBtns.find((b) => b.getAttribute('aria-checked') === 'true') ?? tswBtns[0])?.focus();
+  else if (focusBtn) tmBtn.focus();
+}
+tmBtn?.addEventListener('click', () => setMenu(tsw?.dataset.menu !== 'open'));
+document.addEventListener('click', (e) => {
+  if (tsw?.dataset.menu === 'open' && !tsw.contains(e.target as Node)) setMenu(false);
+});
+tsw?.addEventListener('keydown', (e) => {
+  if (tsw.dataset.menu !== 'open') return;
+  const i = tswBtns.indexOf(document.activeElement as HTMLButtonElement);
+  if (e.key === 'Escape') {
+    e.preventDefault();
+    setMenu(false, true);
+  } else if (e.key === 'ArrowDown' || e.key === 'ArrowUp') {
+    e.preventDefault();
+    const n = tswBtns.length;
+    tswBtns[(i + (e.key === 'ArrowDown' ? 1 : n - 1) + n) % n]?.focus();
+  } else if (e.key === 'Home' || e.key === 'End') {
+    e.preventDefault();
+    tswBtns[e.key === 'Home' ? 0 : tswBtns.length - 1]?.focus();
+  } else if (e.key === 'Tab') {
+    setMenu(false);
+  }
+});
 const choice = (): Choice => (root.dataset.theme === 'light' || root.dataset.theme === 'dark' ? root.dataset.theme : 'system');
 const resolved = (): 'light' | 'dark' => {
   const c = choice();
@@ -25,7 +54,8 @@ function applyTheme() {
   const c = choice();
   const t = resolved();
   if (tsw) tsw.dataset.choice = c;
-  for (const b of tswBtns) b.setAttribute('aria-pressed', String(b.dataset.themeChoice === c));
+  tmBtn?.setAttribute('aria-label', `Theme: ${c[0].toUpperCase()}${c.slice(1)}`);
+  for (const b of tswBtns) b.setAttribute('aria-checked', String(b.dataset.themeChoice === c));
   for (const m of $$<HTMLMetaElement>('meta[name="theme-color"]')) {
     // With no choice, each meta keeps its own media query; a choice pins both.
     m.content = c === 'system' ? (m.media.includes('light') ? '#F4F6FA' : '#0A1020') : t === 'light' ? '#F4F6FA' : '#0A1020';
@@ -47,6 +77,7 @@ for (const b of tswBtns) {
       /* storage blocked: the choice lasts for this visit */
     }
     applyTheme();
+    setMenu(false, true);
   });
 }
 sysLight.addEventListener('change', () => {

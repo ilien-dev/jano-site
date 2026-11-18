@@ -423,16 +423,40 @@ dialog.lb.closing::backdrop { animation: fadeOut 0.25s ease-in both; }
 .cv { color: var(--color-cv); font-weight: 600; }
 
 /* ---------- theme switch ---------- */
-.tsw { position: relative; display: flex; gap: 2px; padding: 3px; border-radius: 12px; background: var(--color-panel2); border: 1.5px solid var(--color-line); }
-.tsw button { position: relative; z-index: 1; width: 34px; height: 35px; display: inline-flex; align-items: center; justify-content: center; border: 0; border-radius: 9px; background: transparent; color: var(--color-body); cursor: pointer; transition: color 0.3s, transform 0.25s var(--ease-out-soft); }
-.tsw button:hover { color: var(--color-ink); }
-.tsw button:active { transform: scale(0.9); }
-.tsw button[aria-pressed="true"] { color: var(--color-night); }
-.tsw .knob { position: absolute; top: 3px; left: 3px; width: 34px; height: 35px; border-radius: 9px; background: var(--color-ink); transition: transform 0.45s cubic-bezier(0.6, 0, 0.2, 1.2); }
-.tsw[data-choice="dark"] .knob { transform: translateX(36px); }
-.tsw[data-choice="system"] .knob { transform: translateX(72px); }
-.tsw button:hover .icon { transform: rotate(-12deg); }
-.tsw .icon { transition: transform 0.35s var(--ease-out-soft); }
+.tmenu { position: relative; }
+.tm-btn { width: 44px; padding: 0; justify-content: center; }
+.tm-btn .icon { display: none; }
+.tmenu[data-choice="light"] .tm-btn .i-light,
+.tmenu[data-choice="dark"] .tm-btn .i-dark,
+.tmenu[data-choice="system"] .tm-btn .i-system { display: block; }
+.tmenu[data-menu="open"] .tm-btn { border-color: var(--color-hot); }
+.tm-list {
+  position: absolute;
+  top: calc(100% + 8px);
+  right: 0;
+  z-index: 20;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  min-width: 164px;
+  padding: 6px;
+  border-radius: 14px;
+  border: 1.5px solid var(--color-line);
+  background: var(--color-deep);
+  box-shadow: 0 16px 40px rgb(10 16 32 / 0.28);
+  opacity: 0;
+  visibility: hidden;
+  transform: translateY(-6px) scale(0.97);
+  transform-origin: top right;
+  transition: opacity 0.2s ease, transform 0.25s var(--ease-out-soft), visibility 0s 0.25s;
+}
+.tmenu[data-menu="open"] .tm-list { opacity: 1; visibility: visible; transform: none; transition: opacity 0.2s ease, transform 0.3s var(--ease-out-soft), visibility 0s; }
+.tm-list button { display: flex; align-items: center; gap: 10px; min-height: 40px; padding: 0 10px; border: 0; border-radius: 9px; background: transparent; color: var(--color-body); font: 600 15px var(--font-sans); text-align: left; cursor: pointer; transition: background-color 0.2s, color 0.2s; }
+.tm-list button span { flex: 1; }
+.tm-list button:hover, .tm-list button:focus-visible { background: var(--color-panel2); color: var(--color-ink); outline-offset: -2px; }
+.tm-list button[aria-checked="true"] { color: var(--color-ink); }
+.tm-list .tm-check { visibility: hidden; color: var(--color-hot); }
+.tm-list button[aria-checked="true"] .tm-check { visibility: visible; }
 @media (max-width: 639px) {
   .btn-gh { width: 44px; padding: 0; justify-content: center; }
   .btn-gh .gh-t, .btn-gh .arr, .btn-show { display: none; }

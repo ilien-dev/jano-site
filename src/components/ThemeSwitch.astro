@@ -2,19 +2,25 @@
 import Icon from './Icon.astro';
 
 const options = [
-  { value: 'light', icon: 'Sun', label: 'Light theme' },
-  { value: 'dark', icon: 'Moon', label: 'Dark theme' },
-  { value: 'system', icon: 'Monitor', label: 'Follow the system theme' },
+  { value: 'light', icon: 'Sun', label: 'Light' },
+  { value: 'dark', icon: 'Moon', label: 'Dark' },
+  { value: 'system', icon: 'Monitor', label: 'System' },
 ];
 ---
 
-<div class="tsw" role="group" aria-label="Theme" data-choice="system" id="tsw">
-  <span class="knob" aria-hidden="true"></span>
-  {
-    options.map((o) => (
-      <button type="button" data-theme-choice={o.value} aria-pressed={o.value === 'system' ? 'true' : 'false'} aria-label={o.label} title={o.label}>
-        <Icon name={o.icon} size={17} />
-      </button>
-    ))
-  }
+<div class="tmenu" id="tsw" data-choice="system" data-menu="closed">
+  <button type="button" class="btn btn-sm tm-btn" id="tm-btn" aria-haspopup="menu" aria-expanded="false" aria-controls="tm-list" aria-label="Theme: System">
+    {options.map((o) => <Icon name={o.icon} size={18} class={`i-${o.value}`} />)}
+  </button>
+  <div class="tm-list" id="tm-list" role="menu" aria-labelledby="tm-btn">
+    {
+      options.map((o) => (
+        <button type="button" role="menuitemradio" data-theme-choice={o.value} aria-checked={o.value === 'system' ? 'true' : 'false'} tabindex="-1">
+          <Icon name={o.icon} size={17} />
+          <span>{o.label}</span>
+          <Icon name="Check" size={16} class="tm-check" />
+        </button>
+      ))
+    }
+  </div>
 </div>
