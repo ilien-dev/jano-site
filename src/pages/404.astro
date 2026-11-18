@@ -1,0 +1,16 @@
+---
+import Layout from '../layouts/Layout.astro';
+import Logo from '../components/Logo.astro';
+---
+
+<Layout title="Page not found · Jano" description="This page does not exist. Go back to Jano, the animated SVG hero for your GitHub README.">
+  <main class="relative flex min-h-dvh items-center justify-center overflow-hidden px-6">
+    <div class="dots" aria-hidden="true"></div>
+    <div class="rise relative flex flex-col items-center gap-6 text-center">
+      <Logo size={72} />
+      <h1 class="m-0 text-[clamp(40px,6vw,72px)] leading-none font-semibold">This loop has <span class="text-hot">a gap.</span></h1>
+      <p class="m-0 text-lg text-body">The page you asked for is not here.</p>
+      <a class="btn btn-pri" href="/">Back to Jano <span class="arr" aria-hidden="true">→</span></a>
+    </div>
+  </main>
+</Layout>

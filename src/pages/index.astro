@@ -1,0 +1,236 @@
+---
+import Layout from '../layouts/Layout.astro';
+import Logo from '../components/Logo.astro';
+import { projects, agents } from '../data/projects';
+
+const cols = [0, 1, 2, 3, 4].map((ci) => {
+  const one = [0, 1, 2].map((k) => {
+    const p = projects[(ci * 3 + k) % projects.length];
+    return { slug: p.slug, mode: (ci + k) % 2 === 1 ? 'light' : 'dark' };
+  });
+  return one.concat(one);
+});
+const agentLoop = [...agents, ...agents, ...agents, ...agents];
+const cmds = {
+  market: '/plugin marketplace add ilien-dev/jano',
+  plugin: '/plugin install jano@jano',
+  npx: 'npx skills add ilien-dev/jano',
+};
+---
+
+<Layout
+  title="Jano: an animated SVG hero for your GitHub README"
+  description="Jano is an agent skill for Claude Code, Codex, Cursor and other AI agents. It draws your repository an animated SVG banner for GitHub's dark and light themes, already placed at the top of your README."
+>
+  <div class="relative overflow-hidden">
+    <header class="absolute inset-x-0 top-0 z-10">
+      <nav aria-label="Main" class="mx-auto flex max-w-[1240px] flex-wrap items-center justify-between gap-4 px-6 py-5">
+        <a href="#top" aria-label="Jano, home" class="flex items-center gap-3 text-ink no-underline hover:text-ink">
+          <Logo />
+          <span class="text-[22px] font-semibold">Jano</span>
+        </a>
+        <div class="flex items-center gap-3">
+          <a class="btn hidden sm:inline-flex" href="#gallery" style="min-height:44px;font-size:15px">Showroom</a>
+          <a class="btn" href="https://github.com/ilien-dev/jano" style="min-height:44px;font-size:15px">GitHub <span class="arr" aria-hidden="true">↗</span></a>
+        </div>
+      </nav>
+    </header>
+
+    <!-- Hero: wall of real banners -->
+    <section id="top" class="stage relative h-[680px] overflow-hidden sm:h-[820px]">
+      <div class="wall" aria-hidden="true" inert>
+        {
+          cols.map((col) => (
+            <div class="col">
+              <div class="colin">
+                {col.map((t) => (
+                  <div class="tile">
+                    <img
+                      src={`/banners/${t.slug}/hero-${t.mode}.svg`}
+                      alt=""
+                      width="1280"
+                      height="640"
+                      decoding="async"
+                      fetchpriority="low"
+                    />
+                  </div>
+                ))}
+              </div>
+            </div>
+          ))
+        }
+      </div>
+      <div class="pointer-events-none absolute inset-0 bg-night/70"></div>
+      <div class="veil-b"></div>
+      <div class="absolute inset-0 flex items-center justify-center px-6 pt-24 pb-10">
+        <div class="rise flex max-w-[900px] flex-col items-center gap-6 text-center">
+          <span class="rounded-full border-[1.5px] border-line bg-deep px-4 py-2 font-mono text-sm text-body">Every banner here was drawn by Jano</span>
+          <h1 class="m-0 text-[clamp(46px,7vw,100px)] leading-[0.96] font-semibold tracking-[-0.03em]">
+            Your README, <span class="text-hot">on the wall.</span>
+          </h1>
+          <p class="m-0 max-w-[46ch] text-[clamp(18px,2vw,21px)] leading-normal text-body">
+            An agent skill that gives your repository an animated banner showing what it does, in dark and light mode, before anyone reads a word.
+          </p>
+          <div class="flex flex-wrap justify-center gap-3">
+            <a class="btn btn-pri" href="#install">Install in Claude Code <span class="arr" aria-hidden="true">→</span></a>
+            <a class="btn" href="#gallery">Browse banners</a>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <main class="relative">
+      <div class="dots" aria-hidden="true"></div>
+
+      <!-- Install -->
+      <div class="relative mx-auto max-w-[1240px] px-6">
+        <section id="install" class="reveal flex flex-wrap items-center gap-10 pt-10 pb-24">
+          <div class="min-w-0 flex-[1_1_360px]">
+            <p class="m-0 mb-3 font-mono text-[15px] text-hot">Install</p>
+            <h2 class="m-0 mb-4 text-[clamp(34px,4.4vw,56px)] leading-[1.04] font-semibold">Plugin first. Anywhere after.</h2>
+            <p class="m-0 text-lg leading-relaxed text-body">
+              Jano needs Python 3.9 or later. With <a href="https://docs.astral.sh/uv/">uv</a> that is all; without it, run <code class="font-mono text-[0.9em] text-ink">pip install fonttools brotli</code> once.
+            </p>
+          </div>
+          <div class="relative flex min-w-0 flex-[1.3_1_520px] flex-col gap-[18px] rounded-[22px] border-[1.5px] border-line bg-deep p-[clamp(22px,3vw,40px)]">
+            <div class="seg" role="tablist" aria-label="Install method" data-tab="plugin" id="seg">
+              <span class="knob" aria-hidden="true"></span>
+              <button type="button" role="tab" id="tab-plugin" aria-selected="true" aria-controls="panel-plugin" data-tab-btn="plugin">Claude Code plugin</button>
+              <button type="button" role="tab" id="tab-npx" aria-selected="false" aria-controls="panel-npx" data-tab-btn="npx" tabindex="-1">npx · any agent</button>
+            </div>
+            <div class="panel flex flex-col gap-3" role="tabpanel" id="panel-plugin" aria-labelledby="tab-plugin">
+              <div class="cmd"><code>{cmds.market}</code><button type="button" class="copy" data-copy={cmds.market} aria-label="Copy marketplace command">Copy</button></div>
+              <div class="cmd"><code>{cmds.plugin}</code><button type="button" class="copy" data-copy={cmds.plugin} aria-label="Copy plugin install command">Copy</button></div>
+              <p class="m-0 font-mono text-sm text-muted">then /jano:jano</p>
+            </div>
+            <div class="panel flex flex-col gap-3" role="tabpanel" id="panel-npx" aria-labelledby="tab-npx" hidden>
+              <div class="cmd"><code>{cmds.npx}</code><button type="button" class="copy" data-copy={cmds.npx} aria-label="Copy npx command">Copy</button></div>
+              <p class="m-0 font-mono text-sm text-muted">then /jano · $jano · "use the jano skill on this repository"</p>
+            </div>
+          </div>
+        </section>
+      </div>
+
+      <!-- Works with -->
+      <section aria-labelledby="works" class="mqw relative overflow-hidden pb-24">
+        <h2 id="works" class="sr-only">Works with</h2>
+        <div class="mq">
+          {
+            agentLoop.map((g, i) => (
+              <a class="agent" href={g.href} aria-hidden={i >= agents.length ? 'true' : undefined} tabindex={i >= agents.length ? -1 : undefined}>
+                <span class="m" aria-hidden="true">{g.m}</span>
+                <span class="font-semibold">{g.name}</span>
+                <span class={`font-mono text-xs ${g.hot ? 'text-hot' : 'text-muted'}`}>{g.note}</span>
+              </a>
+            ))
+          }
+        </div>
+      </section>
+
+      <div class="relative mx-auto max-w-[1240px] px-6">
+        <!-- Before / after -->
+        <section aria-labelledby="ba" class="reveal flex flex-wrap items-center gap-10 pt-10 pb-24" id="ba-root" data-after="true">
+          <div class="flex min-w-0 flex-[1_1_340px] flex-col gap-[18px]">
+            <p class="m-0 font-mono text-[15px] text-hot">Before / after</p>
+            <h2 id="ba" class="m-0 text-[clamp(32px,4vw,52px)] leading-[1.05] font-semibold">Same README. One header more.</h2>
+            <p class="m-0 text-lg leading-relaxed text-body">The banner goes on top. Your title, text, badges and links stay exactly as you wrote them.</p>
+            <div class="flex flex-wrap gap-2.5">
+              <button type="button" class="btn" data-ba="false" aria-pressed="false">Without Jano</button>
+              <button type="button" class="btn" data-ba="true" aria-pressed="true">With Jano</button>
+            </div>
+          </div>
+          <div class="win min-w-0 flex-[1.4_1_520px]">
+            <div class="winbar"><span class="lite"></span><span class="lite"></span><span class="lite"></span><span class="ml-2">jano / README.md</span></div>
+            <div class="flex min-h-[460px] flex-col gap-3.5 p-[22px]">
+              <div class="ba-banner">
+                <div>
+                  <img src="/banners/jano/hero-dark.svg" alt="The Jano banner: a poster is drawn part by part, checked and saved for dark and light." width="1280" height="640" loading="lazy" decoding="async" class="block h-auto w-full rounded-xl border-[1.5px] border-line" />
+                </div>
+              </div>
+              <div class="text-[30px] font-semibold">Jano</div>
+              <div class="flex gap-2" aria-hidden="true"><span class="h-[22px] w-[90px] rounded bg-panel"></span><span class="h-[22px] w-[70px] rounded bg-panel"></span><span class="h-[22px] w-[80px] rounded bg-panel"></span></div>
+              <span class="h-2 w-[94%] rounded bg-line" aria-hidden="true"></span>
+              <span class="h-2 w-[88%] rounded bg-line" aria-hidden="true"></span>
+              <span class="h-2 w-[60%] rounded bg-line" aria-hidden="true"></span>
+              <span class="mt-2.5 h-4 w-[30%] rounded bg-[#3A4A70]" aria-hidden="true"></span>
+              <span class="h-2 w-[90%] rounded bg-line" aria-hidden="true"></span>
+              <span class="h-2 w-[74%] rounded bg-line" aria-hidden="true"></span>
+            </div>
+          </div>
+        </section>
+
+        <!-- Gallery -->
+        <section id="gallery" class="reveal pt-10 pb-24">
+          <div class="mb-7 flex flex-wrap items-end justify-between gap-4">
+            <h2 class="m-0 text-[clamp(32px,4vw,52px)] font-semibold">Open a banner</h2>
+            <p class="m-0 max-w-[40ch] text-lg text-body">Seven real projects. No two look alike, because no two projects do the same thing.</p>
+          </div>
+          <div class="grid grid-cols-[repeat(auto-fill,minmax(300px,1fr))] gap-4">
+            {
+              projects.map((p, i) => (
+                <button type="button" class={i === 0 ? "gcard col-span-full" : "gcard"} data-open={i} aria-haspopup="dialog" aria-label={`Open the ${p.name} banner`}>
+                  <img src={`/banners/${p.slug}/hero-dark.svg`} alt="" width="1280" height="640" loading="lazy" decoding="async" />
+                  <span class={`px-1.5 font-semibold ${i === 0 ? "text-2xl" : "text-xl"}`}>{p.name}</span>
+                  <span class="px-1.5 pr-14 text-lg leading-snug text-body">{p.tag}</span>
+                  <span class="ex" aria-hidden="true">+</span>
+                </button>
+              ))
+            }
+          </div>
+        </section>
+
+        <!-- Facts -->
+        <section aria-label="What you get" class="reveal grid grid-cols-[repeat(auto-fit,minmax(240px,1fr))] gap-4 pt-10 pb-28">
+          <div class="fact win p-6"><p class="m-0 mb-2.5 font-mono text-sm text-hot">dark + light</p><p class="m-0 text-xl leading-snug font-semibold">Two files that follow each visitor's GitHub theme.</p></div>
+          <div class="fact win p-6"><p class="m-0 mb-2.5 font-mono text-sm text-hot">60–130 KB</p><p class="m-0 text-xl leading-snug font-semibold">Plain SVG, CSS only. Nothing to install or host.</p></div>
+          <div class="fact win p-6"><p class="m-0 mb-2.5 font-mono text-sm text-hot">checked</p><p class="m-0 text-xl leading-snug font-semibold">Text size, contrast, loop, speed and file size, every build.</p></div>
+          <div class="fact win p-6"><p class="m-0 mb-2.5 font-mono text-sm text-hot">reduced motion</p><p class="m-0 text-xl leading-snug font-semibold">A still picture for people who turn motion off.</p></div>
+        </section>
+
+        <footer class="flex flex-wrap justify-between gap-3 border-t-[1.5px] border-line pt-7 pb-12 text-[15px] text-muted">
+          <span>Jano · MIT licence · Space Grotesk and JetBrains Mono under SIL OFL</span>
+          <a href="https://github.com/ilien-dev/jano/releases">Releases ↗</a>
+        </footer>
+      </div>
+    </main>
+  </div>
+
+  <!-- Lightbox -->
+  <dialog class="lb" id="lb" aria-labelledby="lb-title">
+    <div class="win">
+      <div class="winbar justify-between">
+        <span class="flex items-center gap-2"><span class="lite"></span><span class="lite"></span><span class="lite"></span><span class="ml-2" id="lb-file">anzu / hero-dark.svg</span></span>
+        <button type="button" class="icon-btn" data-close aria-label="Close preview">×</button>
+      </div>
+      <div class="lb-body" id="lb-body">
+        <picture>
+          <img id="lb-img" src="/banners/anzu/hero-dark.svg" alt="" width="1280" height="640" decoding="async" class="block h-auto w-full" />
+        </picture>
+        <div class="flex flex-wrap items-start justify-between gap-4 p-[22px]">
+          <div class="min-w-0 flex-[1_1_360px]">
+            <h2 id="lb-title" class="m-0 mb-1.5 text-2xl font-semibold">Anzu</h2>
+            <p id="lb-tag" class="m-0 text-lg text-body">Your Kindle books, as EPUB.</p>
+          </div>
+          <div class="seg w-[220px]" id="lb-mode" data-tab="dark" role="group" aria-label="Banner theme">
+            <span class="knob" aria-hidden="true"></span>
+            <button type="button" data-mode="dark" aria-pressed="true">Dark</button>
+            <button type="button" data-mode="light" aria-pressed="false">Light</button>
+          </div>
+        </div>
+      </div>
+      <div class="flex flex-wrap justify-between gap-3 border-t-[1.5px] border-line px-[22px] py-4">
+        <div class="flex gap-2.5">
+          <button type="button" class="btn" data-step="-1" aria-label="Previous project">←</button>
+          <button type="button" class="btn" data-step="1" aria-label="Next project">→</button>
+        </div>
+        <a class="btn btn-pri" id="lb-link" href="https://github.com/ilien-dev/anzu">Open on GitHub <span class="arr" aria-hidden="true">↗</span></a>
+      </div>
+    </div>
+  </dialog>
+
+  <script is:inline type="application/json" id="projects-data" set:html={JSON.stringify(projects)} />
+</Layout>
+
+<script>
+  import './../scripts/main';
+</script>

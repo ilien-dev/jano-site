@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://jano.ilien.dev/sitemap.xml
