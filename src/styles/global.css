@@ -375,8 +375,6 @@ dialog.lb.closing::backdrop { animation: fadeOut 0.25s ease-in both; }
 .fact:hover .fact-ic { transform: rotate(-8deg) scale(1.06); border-color: var(--color-coral); }
 
 /* ---------- how to use ---------- */
-.use-card { transition: transform 0.35s var(--ease-out-soft), border-color 0.3s; }
-.use-card:hover { transform: translateY(-5px); border-color: var(--color-muted); }
 .uviz { position: relative; height: 190px; border-radius: 12px; border: 1.5px solid var(--color-line); background: var(--color-night); padding: 16px; display: flex; align-items: center; justify-content: center; overflow: hidden; }
 .uviz::before { content: ''; position: absolute; inset: -18px; background-image: radial-gradient(var(--color-dots) 1.4px, transparent 1.7px); background-size: 18px 18px; animation: drift18 3.2s linear infinite; }
 @keyframes drift18 { to { transform: translate(18px, 18px); } }
