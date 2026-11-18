@@ -163,7 +163,7 @@
   background: var(--color-panel2);
   border: 1.5px solid var(--color-line);
 }
-.seg button {
+.seg button { display: inline-flex; align-items: center; justify-content: center; gap: 8px;
   position: relative;
   z-index: 1;
   flex: 1 1 0;
@@ -196,7 +196,22 @@
   from { opacity: 0; transform: translateY(12px); filter: blur(6px); }
   to { opacity: 1; transform: none; filter: none; }
 }
-.panel:not([hidden]) { animation: inUp 0.5s var(--ease-out-soft) both; }
+.panels { display: grid; }
+.panel {
+  grid-area: 1 / 1;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  transition: opacity 0.45s var(--ease-out-soft), transform 0.45s var(--ease-out-soft), visibility 0s 0s;
+}
+.panel[data-active="false"] {
+  opacity: 0;
+  transform: translateY(10px);
+  visibility: hidden;
+  pointer-events: none;
+  transition: opacity 0.25s ease, transform 0.25s ease, visibility 0s 0.25s;
+}
+.panel[data-active="true"] { transition-delay: 0.08s, 0.08s, 0s; }
 
 /* ---------- commands ---------- */
 .cmd {
@@ -226,6 +241,12 @@
 }
 .copy:hover { transform: translateY(-2px); border-color: var(--color-hot); }
 .copy:active { transform: scale(0.9); }
+.copy { display: inline-flex; align-items: center; justify-content: center; gap: 6px; padding: 0 12px; }
+.copy .i-done { display: none; }
+.copy.done .i-copy { display: none; }
+.copy.done .i-done { display: block; }
+.copy:hover .i-copy { transform: translateY(-1px) rotate(-6deg); }
+.copy .icon { transition: transform 0.25s var(--ease-out-soft); }
 .copy.done { background: var(--color-coral); border-color: var(--color-coral); color: var(--color-night); animation: pop 0.4s var(--ease-out-soft); }
 @keyframes pop { 0% { transform: scale(0.85); } 60% { transform: scale(1.08); } 100% { transform: scale(1); } }
 
@@ -332,6 +353,26 @@ dialog.lb.closing::backdrop { animation: fadeOut 0.25s ease-in both; }
 }
 .icon-btn:hover { transform: rotate(90deg); border-color: var(--color-hot); }
 .icon-btn:active { transform: scale(0.9); }
+
+/* ---------- icons and accents ---------- */
+.icon { flex: none; }
+.btn-sm { min-height: 44px; font-size: 15px; }
+.btn-sq { width: 48px; padding: 0; justify-content: center; }
+.btn .icon:not(.arr) { transition: transform 0.35s var(--ease-out-soft); }
+.btn:hover .icon:not(.arr) { transform: scale(1.12) rotate(-6deg); }
+.eyebrow { display: flex; align-items: center; gap: 8px; margin: 0 0 12px; font: 500 15px var(--font-mono); color: var(--color-hot); }
+.tab-logo { width: 18px; height: 18px; flex: none; transition: transform 0.4s var(--ease-out-soft); }
+.tab-npm { color: #cb3837; transition: transform 0.4s var(--ease-out-soft); }
+.seg button:hover .tab-logo, .seg button:hover .tab-npm { transform: rotate(-12deg) scale(1.1); }
+.cmd-pre { flex: none; min-width: 14px; font: 500 15px var(--font-mono); color: var(--color-muted); }
+.sk { color: var(--color-hot); font-weight: 600; }
+.cmd .sk { position: relative; }
+.cmd .sk::after { content: ''; position: absolute; left: 0; right: 0; bottom: -3px; height: 2px; border-radius: 1px; background: var(--color-coral); transform: scaleX(0); transform-origin: 0 50%; transition: transform 0.35s var(--ease-out-soft); }
+.cmd:hover .sk::after { transform: scaleX(1); }
+.hint { display: flex; align-items: center; gap: 8px; margin: 2px 0 0; font: 500 14px var(--font-mono); color: var(--color-muted); }
+.winbar .icon { margin-right: 2px; }
+.fact-ic { width: 44px; height: 44px; border-radius: 12px; display: inline-flex; align-items: center; justify-content: center; background: var(--color-panel2); border: 1.5px solid var(--color-line); color: var(--color-hot); transition: transform 0.45s var(--ease-out-soft), border-color 0.3s; }
+.fact:hover .fact-ic { transform: rotate(-8deg) scale(1.06); border-color: var(--color-coral); }
 
 /* ---------- how to use ---------- */
 .use-card { transition: transform 0.35s var(--ease-out-soft), border-color 0.3s; }

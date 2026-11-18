@@ -1,0 +1,27 @@
+---
+import Icon from './Icon.astro';
+
+interface Props {
+  text: string;
+  label: string;
+  wrap?: boolean;
+  prefix?: string;
+  class?: string;
+}
+
+const { text, label, wrap = false, prefix, class: cls = '' } = Astro.props;
+
+// The parts that name the skill get the accent: /jano, /jano:jano, $jano, ilien-dev/jano, jano@jano.
+const accent = /(\/jano(?::jano)?|\$jano|ilien-dev\/jano|jano@jano)/;
+const parts = text.split(accent).filter(Boolean).map((t) => ({ t, sk: accent.test(t) }));
+---
+
+<div class={`cmd ${wrap ? 'wrap' : ''} ${cls}`}>
+  {prefix && <span class="cmd-pre" aria-hidden="true">{prefix}</span>}
+  <code>{parts.map((p) => (p.sk ? <span class="sk">{p.t}</span> : p.t))}</code>
+  <button type="button" class="copy" data-copy={text} aria-label={label}>
+    <Icon name="Copy" size={16} class="i-copy" />
+    <Icon name="Check" size={16} class="i-done" />
+    <span class="lbl">Copy</span>
+  </button>
+</div>

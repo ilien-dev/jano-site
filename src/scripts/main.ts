@@ -40,13 +40,14 @@ for (const btn of $$<HTMLButtonElement>('[data-copy]')) {
     } catch {
       /* clipboard blocked: still show feedback */
     }
-    btn.textContent = 'Copied';
+    const lbl = btn.querySelector('.lbl');
+    if (lbl) lbl.textContent = 'Copied';
     btn.classList.remove('done');
     void btn.offsetWidth;
     btn.classList.add('done');
     window.clearTimeout(timer);
     timer = window.setTimeout(() => {
-      btn.textContent = 'Copy';
+      if (lbl) lbl.textContent = 'Copy';
       btn.classList.remove('done');
     }, 1600);
   });
@@ -63,7 +64,10 @@ function selectTab(name: string, focus = false) {
     t.setAttribute('aria-selected', String(on));
     t.tabIndex = on ? 0 : -1;
     const panel = document.getElementById(t.getAttribute('aria-controls') ?? '');
-    if (panel) panel.hidden = !on;
+    if (panel) {
+      panel.dataset.active = String(on);
+      panel.inert = !on;
+    }
     if (on && focus) t.focus();
   }
 }

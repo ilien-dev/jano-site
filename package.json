@@ -19,6 +19,8 @@
     "tailwindcss": "^4.3.5"
   },
   "devDependencies": {
+    "lucide-static": "^1.74.0",
+    "simple-icons": "^16.38.0",
     "unlighthouse": "^0.19.1",
     "wrangler": "^4.164.0"
   }

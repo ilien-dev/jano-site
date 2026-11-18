@@ -1,6 +1,8 @@
 ---
 import Layout from '../layouts/Layout.astro';
 import Logo from '../components/Logo.astro';
+import Icon from '../components/Icon.astro';
+import Cmd from '../components/Cmd.astro';
 import { projects, agents } from '../data/projects';
 
 const cols = [0, 1, 2, 3, 4].map((ci) => {
@@ -11,11 +13,17 @@ const cols = [0, 1, 2, 3, 4].map((ci) => {
   return one.concat(one);
 });
 const agentLoop = [...agents, ...agents, ...agents, ...agents];
-const cmds = {
-  market: '/plugin marketplace add ilien-dev/jano',
-  plugin: '/plugin install jano@jano',
-  npx: 'npx skills add ilien-dev/jano',
+const prompts = {
+  one: '/jano make a hero for this repository',
+  four: "/jano make 4 alternatives for this repository's hero",
+  tip: '/jano show a book turning into an EPUB, keep our yellow',
 };
+const facts = [
+  { icon: 'SunMoon', k: 'dark + light', v: "Two files that follow each visitor's GitHub theme." },
+  { icon: 'Feather', k: '60–130 KB', v: 'Plain SVG, CSS only. Nothing to install or host.' },
+  { icon: 'ShieldCheck', k: 'checked', v: 'Text size, contrast, loop, speed and file size, every build.' },
+  { icon: 'CirclePause', k: 'reduced motion', v: 'A still picture for people who turn motion off.' },
+];
 ---
 
 <Layout
@@ -30,8 +38,8 @@ const cmds = {
           <span class="text-[22px] font-semibold">Jano</span>
         </a>
         <div class="flex items-center gap-3">
-          <a class="btn hidden sm:inline-flex" href="#gallery" style="min-height:44px;font-size:15px">Showroom</a>
-          <a class="btn" href="https://github.com/ilien-dev/jano" style="min-height:44px;font-size:15px">GitHub <span class="arr" aria-hidden="true">↗</span></a>
+          <a class="btn btn-sm hidden sm:inline-flex" href="#gallery"><Icon name="LayoutGrid" />Showroom</a>
+          <a class="btn btn-sm" href="https://github.com/ilien-dev/jano"><Icon name="github" />GitHub <Icon name="ArrowUpRight" size={16} class="arr" /></a>
         </div>
       </nav>
     </header>
@@ -45,14 +53,7 @@ const cmds = {
               <div class="colin">
                 {col.map((t) => (
                   <div class="tile">
-                    <img
-                      data-src={`/banners/${t.slug}/hero-${t.mode}.svg`}
-                      alt=""
-                      width="1280"
-                      height="640"
-                      decoding="async"
-                      fetchpriority="low"
-                    />
+                    <img data-src={`/banners/${t.slug}/hero-${t.mode}.svg`} alt="" width="1280" height="640" decoding="async" fetchpriority="low" />
                   </div>
                 ))}
               </div>
@@ -64,7 +65,7 @@ const cmds = {
       <div class="veil-b"></div>
       <div class="absolute inset-0 flex items-center justify-center px-6 pt-24 pb-10">
         <div class="flex max-w-[900px] flex-col items-center gap-6 text-center">
-          <span class="rise rounded-full border-[1.5px] border-line bg-deep px-4 py-2 font-mono text-sm text-body">Every banner here was drawn by Jano</span>
+          <span class="rise inline-flex items-center gap-2 rounded-full border-[1.5px] border-line bg-deep px-4 py-2 font-mono text-sm text-body"><Icon name="Sparkles" size={16} class="text-hot" />Every banner here was drawn by Jano</span>
           <h1 class="m-0 text-[clamp(46px,7vw,100px)] leading-[0.96] font-semibold tracking-[-0.03em]">
             Your README, <span class="text-hot">on the wall.</span>
           </h1>
@@ -72,8 +73,8 @@ const cmds = {
             An agent skill that gives your repository an animated banner showing what it does, in dark and light mode, before anyone reads a word.
           </p>
           <div class="rise flex flex-wrap justify-center gap-3" style="animation-delay:.12s">
-            <a class="btn btn-pri" href="#install">Install in Claude Code <span class="arr" aria-hidden="true">→</span></a>
-            <a class="btn" href="#gallery">Browse banners</a>
+            <a class="btn btn-pri" href="#install"><Icon name="Download" />Install in Claude Code <Icon name="ArrowRight" size={16} class="arr" /></a>
+            <a class="btn" href="#gallery"><Icon name="Images" />Browse banners</a>
           </div>
         </div>
       </div>
@@ -84,9 +85,9 @@ const cmds = {
 
       <!-- Install -->
       <div class="relative mx-auto max-w-[1240px] px-6">
-        <section id="install" class="reveal flex flex-wrap items-center gap-10 pt-10 pb-24">
-          <div class="min-w-0 flex-[1_1_360px]">
-            <p class="m-0 mb-3 font-mono text-[15px] text-hot">Install</p>
+        <section id="install" class="reveal flex flex-wrap items-start gap-10 pt-10 pb-24">
+          <div class="min-w-0 flex-[1_1_360px] lg:pt-8">
+            <p class="eyebrow"><Icon name="Download" size={16} />Install</p>
             <h2 class="m-0 mb-4 text-[clamp(34px,4.4vw,56px)] leading-[1.04] font-semibold">Plugin first. Anywhere after.</h2>
             <p class="m-0 text-lg leading-relaxed text-body">
               Jano needs Python 3.9 or later. With <a href="https://docs.astral.sh/uv/">uv</a> that is all; without it, run <code class="font-mono text-[0.9em] text-ink">pip install fonttools brotli</code> once.
@@ -95,17 +96,24 @@ const cmds = {
           <div class="relative flex min-w-0 flex-[1.3_1_520px] flex-col gap-[18px] rounded-[22px] border-[1.5px] border-line bg-deep p-[clamp(22px,3vw,40px)]">
             <div class="seg" role="tablist" aria-label="Install method" data-tab="plugin" id="seg">
               <span class="knob" aria-hidden="true"></span>
-              <button type="button" role="tab" id="tab-plugin" aria-selected="true" aria-controls="panel-plugin" data-tab-btn="plugin">Claude Code plugin</button>
-              <button type="button" role="tab" id="tab-npx" aria-selected="false" aria-controls="panel-npx" data-tab-btn="npx" tabindex="-1">npx · any agent</button>
+              <button type="button" role="tab" id="tab-plugin" aria-selected="true" aria-controls="panel-plugin" data-tab-btn="plugin">
+                <img src="/logos/claude.svg" alt="" width="18" height="18" class="tab-logo" />Claude Code plugin
+              </button>
+              <button type="button" role="tab" id="tab-npx" aria-selected="false" aria-controls="panel-npx" data-tab-btn="npx" tabindex="-1">
+                <Icon name="npm" size={18} class="tab-npm" />npx · any agent
+              </button>
             </div>
-            <div class="panel flex flex-col gap-3" role="tabpanel" id="panel-plugin" aria-labelledby="tab-plugin">
-              <div class="cmd"><code>{cmds.market}</code><button type="button" class="copy" data-copy={cmds.market} aria-label="Copy marketplace command">Copy</button></div>
-              <div class="cmd"><code>{cmds.plugin}</code><button type="button" class="copy" data-copy={cmds.plugin} aria-label="Copy plugin install command">Copy</button></div>
-              <p class="m-0 font-mono text-sm text-muted">then /jano:jano</p>
-            </div>
-            <div class="panel flex flex-col gap-3" role="tabpanel" id="panel-npx" aria-labelledby="tab-npx" hidden>
-              <div class="cmd"><code>{cmds.npx}</code><button type="button" class="copy" data-copy={cmds.npx} aria-label="Copy npx command">Copy</button></div>
-              <p class="m-0 font-mono text-sm text-muted">then /jano · $jano · "use the jano skill on this repository"</p>
+            <div class="panels">
+              <div class="panel" role="tabpanel" id="panel-plugin" aria-labelledby="tab-plugin" data-active="true">
+                <Cmd text="/plugin marketplace add ilien-dev/jano" label="Copy marketplace command" prefix="1" />
+                <Cmd text="/plugin install jano@jano" label="Copy plugin install command" prefix="2" />
+                <p class="hint"><Icon name="CornerDownRight" size={16} />then <span class="sk">/jano:jano</span> in your project</p>
+              </div>
+              <div class="panel" role="tabpanel" id="panel-npx" aria-labelledby="tab-npx" data-active="false" inert>
+                <Cmd text="npx skills add ilien-dev/jano" label="Copy npx command" prefix="$" />
+                <p class="hint"><Icon name="CornerDownRight" size={16} />then <span class="sk">/jano</span> · <span class="sk">$jano</span> · "use the jano skill on this repository"</p>
+                <p class="hint"><Icon name="Puzzle" size={16} />Claude Code, Codex, Cursor, Gemini CLI and every agent the skills CLI supports.</p>
+              </div>
             </div>
           </div>
         </section>
@@ -116,17 +124,17 @@ const cmds = {
         <section id="use" aria-labelledby="use-h" class="reveal pb-20">
           <div class="mb-8 flex flex-wrap items-end justify-between gap-6">
             <div class="max-w-[640px]">
-              <p class="m-0 mb-3 font-mono text-[15px] text-hot">How to use</p>
+              <p class="eyebrow"><Icon name="BookOpen" size={16} />How to use</p>
               <h2 id="use-h" class="m-0 text-[clamp(32px,4vw,52px)] leading-[1.05] font-semibold">One hero, or four to choose from.</h2>
             </div>
             <p class="m-0 max-w-[44ch] text-lg leading-relaxed text-body">
-              Open your agent in the project and call Jano: <code class="font-mono text-[0.9em] text-ink">/jano</code> in Claude Code
-              (<code class="font-mono text-[0.9em] text-ink">/jano:jano</code> as a plugin), <code class="font-mono text-[0.9em] text-ink">$jano</code> in Codex.
+              Open your agent in the project and call Jano: <code class="sk font-mono text-[0.9em]">/jano</code> in Claude Code
+              (<code class="sk font-mono text-[0.9em]">/jano:jano</code> as a plugin), <code class="sk font-mono text-[0.9em]">$jano</code> in Codex.
             </p>
           </div>
           <div class="grid grid-cols-[repeat(auto-fit,minmax(min(100%,480px),1fr))] gap-5">
             <article class="win use-card flex flex-col">
-              <div class="winbar"><span class="lite"></span><span class="lite"></span><span class="lite"></span><span class="ml-2">01 · One hero</span></div>
+              <div class="winbar"><Icon name="Image" size={16} class="text-hot" /><span>01 · One hero</span></div>
               <div class="flex flex-1 flex-col gap-5 p-[22px]">
                 <div class="uviz" aria-hidden="true">
                   <div class="mini mini-one">
@@ -134,12 +142,12 @@ const cmds = {
                     <span class="mp dw" style="animation-delay:.9s"><span class="mdot"></span></span>
                   </div>
                 </div>
-                <div class="cmd wrap"><code>/jano make a hero for this repository</code><button type="button" class="copy" data-copy="/jano make a hero for this repository" aria-label="Copy the one-hero prompt">Copy</button></div>
+                <Cmd text={prompts.one} label="Copy the one-hero prompt" wrap />
                 <p class="m-0 text-base leading-relaxed text-body">Jano reads the project, draws the banner, checks it and places it at the top of your README.</p>
               </div>
             </article>
             <article class="win use-card flex flex-col">
-              <div class="winbar"><span class="lite"></span><span class="lite"></span><span class="lite"></span><span class="ml-2">02 · Four to choose from</span></div>
+              <div class="winbar"><Icon name="LayoutGrid" size={16} class="text-hot" /><span>02 · Four to choose from</span></div>
               <div class="flex flex-1 flex-col gap-5 p-[22px]">
                 <div class="uviz" aria-hidden="true">
                   <div class="opts">
@@ -149,15 +157,15 @@ const cmds = {
                     <div class="mini opt" style="animation-delay:-2s"><b>D</b><span class="mp"></span><span class="mt"><i style="width:50%"></i><i class="hot" style="width:85%"></i><i class="thin" style="width:70%"></i></span></div>
                   </div>
                 </div>
-                <div class="cmd wrap"><code>/jano make 4 alternatives for this repository's hero</code><button type="button" class="copy" data-copy="/jano make 4 alternatives for this repository's hero" aria-label="Copy the four-alternatives prompt">Copy</button></div>
+                <Cmd text={prompts.four} label="Copy the four-alternatives prompt" wrap />
                 <p class="m-0 text-base leading-relaxed text-body">The options open side by side on one page. Keep one, or mix them: "the picture of B with the layout of C". The README changes only after you choose.</p>
               </div>
             </article>
           </div>
-          <div class="mt-5 flex flex-wrap items-center gap-x-6 gap-y-3 rounded-[18px] border-[1.5px] border-line bg-deep p-[18px]">
-            <span class="font-mono text-sm text-hot">Say what you want to see</span>
-            <div class="cmd wrap min-w-0 flex-[1_1_100%]"><code>/jano show a book turning into an EPUB, keep our yellow</code><button type="button" class="copy" data-copy="/jano show a book turning into an EPUB, keep our yellow" aria-label="Copy the example prompt">Copy</button></div>
-            <span class="text-sm text-muted">Jano never runs unless you call it, and it commits nothing.</span>
+          <div class="mt-5 flex flex-col gap-3 rounded-[18px] border-[1.5px] border-line bg-deep p-[18px]">
+            <span class="eyebrow mb-0"><Icon name="WandSparkles" size={16} />Say what you want to see</span>
+            <Cmd text={prompts.tip} label="Copy the example prompt" wrap />
+            <span class="inline-flex items-center gap-2 text-sm text-muted"><Icon name="ShieldCheck" size={16} />Jano never runs unless you call it, and it commits nothing.</span>
           </div>
         </section>
       </div>
@@ -170,11 +178,7 @@ const cmds = {
             agentLoop.map((g, i) => (
               <a class="agent" href={g.href} aria-hidden={i >= agents.length ? 'true' : undefined} tabindex={i >= agents.length ? -1 : undefined}>
                 <span class="m" aria-hidden="true">
-                  {g.logo ? (
-                    <img src={g.logo} alt="" width="24" height="24" loading="lazy" decoding="async" />
-                  ) : (
-                    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#EEF2F7" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7" rx="2" /><rect x="14" y="3" width="7" height="7" rx="2" /><rect x="3" y="14" width="7" height="7" rx="2" /><path d="M17.5 14v7M14 17.5h7" /></svg>
-                  )}
+                  {g.logo ? <img src={g.logo} alt="" width="24" height="24" loading="lazy" decoding="async" /> : <Icon name="Puzzle" size={20} />}
                 </span>
                 <span class="font-semibold">{g.name}</span>
                 <span class={`font-mono text-xs ${g.hot ? 'text-hot' : 'text-muted'}`}>{g.note}</span>
@@ -188,16 +192,16 @@ const cmds = {
         <!-- Before / after -->
         <section aria-labelledby="ba" class="reveal flex flex-wrap items-center gap-10 pt-10 pb-24" id="ba-root" data-after="true">
           <div class="flex min-w-0 flex-[1_1_340px] flex-col gap-[18px]">
-            <p class="m-0 font-mono text-[15px] text-hot">Before / after</p>
+            <p class="eyebrow mb-0"><Icon name="Columns2" size={16} />Before / after</p>
             <h2 id="ba" class="m-0 text-[clamp(32px,4vw,52px)] leading-[1.05] font-semibold">Same README. One header more.</h2>
             <p class="m-0 text-lg leading-relaxed text-body">The banner goes on top. Your title, text, badges and links stay exactly as you wrote them.</p>
             <div class="flex flex-wrap gap-2.5">
-              <button type="button" class="btn" data-ba="false" aria-pressed="false">Without Jano</button>
-              <button type="button" class="btn" data-ba="true" aria-pressed="true">With Jano</button>
+              <button type="button" class="btn" data-ba="false" aria-pressed="false"><Icon name="EyeOff" />Without Jano</button>
+              <button type="button" class="btn" data-ba="true" aria-pressed="true"><Icon name="Sparkles" />With Jano</button>
             </div>
           </div>
           <div class="win min-w-0 flex-[1.4_1_520px]">
-            <div class="winbar"><span class="lite"></span><span class="lite"></span><span class="lite"></span><span class="ml-2">jano / README.md</span></div>
+            <div class="winbar"><Icon name="FileText" size={16} class="text-hot" /><span>jano / README.md</span></div>
             <div class="flex min-h-[460px] flex-col gap-3.5 p-[22px]">
               <div class="ba-banner">
                 <div>
@@ -219,47 +223,55 @@ const cmds = {
         <!-- Gallery -->
         <section id="gallery" class="reveal pt-10 pb-24">
           <div class="mb-7 flex flex-wrap items-end justify-between gap-4">
-            <h2 class="m-0 text-[clamp(32px,4vw,52px)] font-semibold">Open a banner</h2>
+            <div>
+              <p class="eyebrow"><Icon name="Images" size={16} />Showroom</p>
+              <h2 class="m-0 text-[clamp(32px,4vw,52px)] font-semibold">Open a banner</h2>
+            </div>
             <p class="m-0 max-w-[40ch] text-lg text-body">Seven real projects. No two look alike, because no two projects do the same thing.</p>
           </div>
           <div class="grid grid-cols-[repeat(auto-fill,minmax(300px,1fr))] gap-4">
             {
-              projects.map((p, i) => (
+              projects.map((p, i) =>
                 i === 0 ? (
                   <button type="button" class="gcard gfeat col-span-full" data-open={i} aria-haspopup="dialog" aria-label={`Open the ${p.name} banner`}>
                     <span class="gimg"><img src={`/banners/${p.slug}/hero-dark.svg`} alt="" width="1280" height="640" loading="lazy" decoding="async" /></span>
                     <span class="flex min-w-0 flex-col gap-3 pb-12">
-                      <span class="font-mono text-sm text-hot">Featured</span>
+                      <span class="inline-flex items-center gap-2 font-mono text-sm text-hot"><Icon name="Star" size={16} />Featured</span>
                       <span class="text-2xl font-semibold">{p.name}</span>
                       <span class="text-[clamp(22px,2.4vw,30px)] leading-tight font-semibold">{p.tag}</span>
                       <span class="text-base leading-relaxed text-body">{p.alt}</span>
                     </span>
-                    <span class="ex" aria-hidden="true">+</span>
+                    <span class="ex" aria-hidden="true"><Icon name="Plus" size={18} /></span>
                   </button>
                 ) : (
                   <button type="button" class="gcard" data-open={i} aria-haspopup="dialog" aria-label={`Open the ${p.name} banner`}>
                     <span class="gimg"><img src={`/banners/${p.slug}/hero-dark.svg`} alt="" width="1280" height="640" loading="lazy" decoding="async" /></span>
                     <span class="px-1.5 text-xl font-semibold">{p.name}</span>
                     <span class="px-1.5 pr-14 text-lg leading-snug text-body">{p.tag}</span>
-                    <span class="ex" aria-hidden="true">+</span>
+                    <span class="ex" aria-hidden="true"><Icon name="Plus" size={18} /></span>
                   </button>
-                )
-              ))
+                ),
+              )
             }
           </div>
         </section>
 
         <!-- Facts -->
         <section aria-label="What you get" class="reveal grid grid-cols-[repeat(auto-fit,minmax(240px,1fr))] gap-4 pt-10 pb-28">
-          <div class="fact win p-6"><p class="m-0 mb-2.5 font-mono text-sm text-hot">dark + light</p><p class="m-0 text-xl leading-snug font-semibold">Two files that follow each visitor's GitHub theme.</p></div>
-          <div class="fact win p-6"><p class="m-0 mb-2.5 font-mono text-sm text-hot">60–130 KB</p><p class="m-0 text-xl leading-snug font-semibold">Plain SVG, CSS only. Nothing to install or host.</p></div>
-          <div class="fact win p-6"><p class="m-0 mb-2.5 font-mono text-sm text-hot">checked</p><p class="m-0 text-xl leading-snug font-semibold">Text size, contrast, loop, speed and file size, every build.</p></div>
-          <div class="fact win p-6"><p class="m-0 mb-2.5 font-mono text-sm text-hot">reduced motion</p><p class="m-0 text-xl leading-snug font-semibold">A still picture for people who turn motion off.</p></div>
+          {
+            facts.map((f) => (
+              <div class="fact win p-6">
+                <span class="fact-ic"><Icon name={f.icon} size={22} /></span>
+                <p class="m-0 mt-4 mb-2.5 font-mono text-sm text-hot">{f.k}</p>
+                <p class="m-0 text-xl leading-snug font-semibold">{f.v}</p>
+              </div>
+            ))
+          }
         </section>
 
         <footer class="flex flex-wrap justify-between gap-3 border-t-[1.5px] border-line pt-7 pb-12 text-[15px] text-muted">
-          <span>Jano · MIT licence · Space Grotesk and JetBrains Mono under SIL OFL</span>
-          <a href="https://github.com/ilien-dev/jano/releases">Releases ↗</a>
+          <span class="inline-flex items-center gap-2"><Icon name="Scale" size={16} />Jano · MIT licence · Space Grotesk and JetBrains Mono under SIL OFL</span>
+          <a class="inline-flex items-center gap-2" href="https://github.com/ilien-dev/jano/releases"><Icon name="Tag" size={16} />Releases</a>
         </footer>
       </div>
     </main>
@@ -269,31 +281,29 @@ const cmds = {
   <dialog class="lb" id="lb" aria-labelledby="lb-title">
     <div class="win">
       <div class="winbar justify-between">
-        <span class="flex items-center gap-2"><span class="lite"></span><span class="lite"></span><span class="lite"></span><span class="ml-2" id="lb-file">anzu / hero-dark.svg</span></span>
-        <button type="button" class="icon-btn" data-close aria-label="Close preview">×</button>
+        <span class="flex items-center gap-2"><Icon name="Image" size={16} class="text-hot" /><span id="lb-file">anzu / hero-dark.svg</span></span>
+        <button type="button" class="icon-btn" data-close aria-label="Close preview"><Icon name="X" size={20} /></button>
       </div>
       <div class="lb-body" id="lb-body">
-        <picture>
-          <img id="lb-img" src="/banners/anzu/hero-dark.svg" alt="" width="1280" height="640" decoding="async" class="block h-auto w-full" />
-        </picture>
+        <img id="lb-img" src="/banners/anzu/hero-dark.svg" alt="" width="1280" height="640" decoding="async" class="block h-auto w-full" />
         <div class="flex flex-wrap items-start justify-between gap-4 p-[22px]">
           <div class="min-w-0 flex-[1_1_360px]">
             <h2 id="lb-title" class="m-0 mb-1.5 text-2xl font-semibold">Anzu</h2>
             <p id="lb-tag" class="m-0 text-lg text-body">Your Kindle books, as EPUB.</p>
           </div>
-          <div class="seg w-[220px]" id="lb-mode" data-tab="dark" role="group" aria-label="Banner theme">
+          <div class="seg w-[240px]" id="lb-mode" data-tab="dark" role="group" aria-label="Banner theme">
             <span class="knob" aria-hidden="true"></span>
-            <button type="button" data-mode="dark" aria-pressed="true">Dark</button>
-            <button type="button" data-mode="light" aria-pressed="false">Light</button>
+            <button type="button" data-mode="dark" aria-pressed="true"><Icon name="Moon" size={16} />Dark</button>
+            <button type="button" data-mode="light" aria-pressed="false"><Icon name="Sun" size={16} />Light</button>
           </div>
         </div>
       </div>
       <div class="flex flex-wrap justify-between gap-3 border-t-[1.5px] border-line px-[22px] py-4">
         <div class="flex gap-2.5">
-          <button type="button" class="btn" data-step="-1" aria-label="Previous project">←</button>
-          <button type="button" class="btn" data-step="1" aria-label="Next project">→</button>
+          <button type="button" class="btn btn-sq" data-step="-1" aria-label="Previous project"><Icon name="ChevronLeft" size={20} /></button>
+          <button type="button" class="btn btn-sq" data-step="1" aria-label="Next project"><Icon name="ChevronRight" size={20} /></button>
         </div>
-        <a class="btn btn-pri" id="lb-link" href="https://github.com/ilien-dev/anzu">Open on GitHub <span class="arr" aria-hidden="true">↗</span></a>
+        <a class="btn btn-pri" id="lb-link" href="https://github.com/ilien-dev/anzu"><Icon name="github" />Open on GitHub <Icon name="ArrowUpRight" size={16} class="arr" /></a>
       </div>
     </div>
   </dialog>
