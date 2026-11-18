@@ -12,19 +12,12 @@ const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
 /* ---------- wall: load the banners after the page is up ---------- */
 function loadWall() {
-  const wallIo = new IntersectionObserver(
-    (entries) => {
-      for (const e of entries) {
-        if (!e.isIntersecting) continue;
-        const img = e.target as HTMLImageElement;
-        wallIo.unobserve(img);
-        img.addEventListener('load', () => img.classList.add('loaded'), { once: true });
-        img.src = img.dataset.src ?? '';
-      }
-    },
-    { rootMargin: '200px' },
-  );
-  for (const img of $$<HTMLImageElement>('.wall img[data-src]')) wallIo.observe(img);
+  // Load every tile at once: the copies scroll in from clipped edges, and an
+  // observer would leave them as empty boxes until they were already on screen.
+  for (const img of $$<HTMLImageElement>('.wall img[data-src]')) {
+    img.addEventListener('load', () => img.classList.add('loaded'), { once: true });
+    img.src = img.dataset.src ?? '';
+  }
 }
 const idle = (fn: () => void) =>
   'requestIdleCallback' in window ? window.requestIdleCallback(fn, { timeout: 2500 }) : window.setTimeout(fn, 800);

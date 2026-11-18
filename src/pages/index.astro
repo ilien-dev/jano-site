@@ -5,8 +5,11 @@ import Icon from '../components/Icon.astro';
 import Cmd from '../components/Cmd.astro';
 import { projects, agents } from '../data/projects';
 
+// Each half of a column must be taller than the column (1500px, ~202px per tile),
+// or the loop shows a gap that fills in all at once when the animation restarts.
+const PER_HALF = 8;
 const cols = [0, 1, 2, 3, 4].map((ci) => {
-  const one = [0, 1, 2].map((k) => {
+  const one = Array.from({ length: PER_HALF }, (_, k) => {
     const p = projects[(ci * 3 + k) % projects.length];
     return { slug: p.slug, mode: (ci + k) % 2 === 1 ? 'light' : 'dark' };
   });

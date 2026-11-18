@@ -226,7 +226,8 @@
 }
 .cmd:hover { border-color: var(--color-muted); transform: translateX(4px); }
 .cmd.wrap code { white-space: normal; overflow: visible; line-height: 1.5; }
-.cmd code { flex: 1; min-width: 0; overflow-x: auto; white-space: nowrap; font: 500 16px var(--font-mono); color: var(--color-ink); }
+.cmd code { flex: 1; min-width: 0; overflow-x: auto; overflow-y: hidden; scrollbar-width: none; padding: 4px 0 6px; white-space: nowrap; font: 500 16px var(--font-mono); color: var(--color-ink); }
+.cmd code::-webkit-scrollbar { display: none; }
 .copy {
   flex: none;
   min-width: 92px;
@@ -366,6 +367,7 @@ dialog.lb.closing::backdrop { animation: fadeOut 0.25s ease-in both; }
 .seg button:hover .tab-logo, .seg button:hover .tab-npm { transform: rotate(-12deg) scale(1.1); }
 .cmd-pre { flex: none; min-width: 14px; font: 500 15px var(--font-mono); color: var(--color-muted); }
 .sk { color: var(--color-hot); font-weight: 600; }
+.cv { color: #8fb4ff; font-weight: 600; }
 .cmd .sk { position: relative; }
 .cmd .sk::after { content: ''; position: absolute; left: 0; right: 0; bottom: -3px; height: 2px; border-radius: 1px; background: var(--color-coral); transform: scaleX(0); transform-origin: 0 50%; transition: transform 0.35s var(--ease-out-soft); }
 .cmd:hover .sk::after { transform: scaleX(1); }
