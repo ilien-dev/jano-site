@@ -16,6 +16,13 @@ const cols = [0, 1, 2, 3, 4].map((ci) => {
   });
   return one.concat(one);
 });
+// The version shown under the hero buttons, read from the skill's plugin manifest at build time.
+// If GitHub cannot be reached, the line is left out instead of showing a stale number.
+let version: string | null = null;
+try {
+  const res = await fetch('https://raw.githubusercontent.com/ilien-dev/jano/main/.claude-plugin/plugin.json');
+  if (res.ok) version = (await res.json()).version ?? null;
+} catch {}
 const agentLoop = [...agents, ...agents, ...agents, ...agents];
 const prompts = {
   one: '/jano make a hero for this repository',
@@ -81,6 +88,11 @@ const facts = [
             <a class="btn btn-pri" href="#install"><Icon name="Download" />Install in Claude Code <Icon name="ArrowRight" size={16} class="arr" /></a>
             <a class="btn" href="#gallery"><Icon name="Images" />Browse banners</a>
           </div>
+          {version && (
+            <a class="rise font-mono text-sm text-body no-underline hover:text-ink" style="animation-delay:.18s" href={`https://github.com/ilien-dev/jano/releases/tag/v${version}`}>
+              Current version: v{version}
+            </a>
+          )}
         </div>
       </div>
     </section>
