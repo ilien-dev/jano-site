@@ -46,7 +46,7 @@ const cmds = {
                 {col.map((t) => (
                   <div class="tile">
                     <img
-                      src={`/banners/${t.slug}/hero-${t.mode}.svg`}
+                      data-src={`/banners/${t.slug}/hero-${t.mode}.svg`}
                       alt=""
                       width="1280"
                       height="640"
@@ -63,15 +63,15 @@ const cmds = {
       <div class="pointer-events-none absolute inset-0 bg-night/70"></div>
       <div class="veil-b"></div>
       <div class="absolute inset-0 flex items-center justify-center px-6 pt-24 pb-10">
-        <div class="rise flex max-w-[900px] flex-col items-center gap-6 text-center">
-          <span class="rounded-full border-[1.5px] border-line bg-deep px-4 py-2 font-mono text-sm text-body">Every banner here was drawn by Jano</span>
+        <div class="flex max-w-[900px] flex-col items-center gap-6 text-center">
+          <span class="rise rounded-full border-[1.5px] border-line bg-deep px-4 py-2 font-mono text-sm text-body">Every banner here was drawn by Jano</span>
           <h1 class="m-0 text-[clamp(46px,7vw,100px)] leading-[0.96] font-semibold tracking-[-0.03em]">
             Your README, <span class="text-hot">on the wall.</span>
           </h1>
-          <p class="m-0 max-w-[46ch] text-[clamp(18px,2vw,21px)] leading-normal text-body">
+          <p class="rise m-0 max-w-[46ch] text-[clamp(18px,2vw,21px)] leading-normal text-body">
             An agent skill that gives your repository an animated banner showing what it does, in dark and light mode, before anyone reads a word.
           </p>
-          <div class="flex flex-wrap justify-center gap-3">
+          <div class="rise flex flex-wrap justify-center gap-3" style="animation-delay:.12s">
             <a class="btn btn-pri" href="#install">Install in Claude Code <span class="arr" aria-hidden="true">→</span></a>
             <a class="btn" href="#gallery">Browse banners</a>
           </div>

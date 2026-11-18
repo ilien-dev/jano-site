@@ -10,6 +10,27 @@ const $ = <T extends Element = HTMLElement>(sel: string, root: ParentNode = docu
 const $$ = <T extends Element = HTMLElement>(sel: string, root: ParentNode = document) => Array.from(root.querySelectorAll<T>(sel));
 const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
+/* ---------- wall: load the banners after the page is up ---------- */
+function loadWall() {
+  const wallIo = new IntersectionObserver(
+    (entries) => {
+      for (const e of entries) {
+        if (!e.isIntersecting) continue;
+        const img = e.target as HTMLImageElement;
+        wallIo.unobserve(img);
+        img.addEventListener('load', () => img.classList.add('loaded'), { once: true });
+        img.src = img.dataset.src ?? '';
+      }
+    },
+    { rootMargin: '200px' },
+  );
+  for (const img of $$<HTMLImageElement>('.wall img[data-src]')) wallIo.observe(img);
+}
+const idle = (fn: () => void) =>
+  'requestIdleCallback' in window ? window.requestIdleCallback(fn, { timeout: 2500 }) : window.setTimeout(fn, 800);
+if (document.readyState === 'complete') idle(loadWall);
+else window.addEventListener('load', () => idle(loadWall), { once: true });
+
 /* ---------- copy buttons ---------- */
 for (const btn of $$<HTMLButtonElement>('[data-copy]')) {
   let timer = 0;
