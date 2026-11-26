@@ -19,7 +19,7 @@ const {
   jsonLd,
   lang,
   locale = 'en_US',
-  ogImageAlt = 'Jano: animated GitHub README banners for dark and light mode.',
+  ogImageAlt = 'Jano: a README that explains your project, with moving pictures in dark and light.',
   standalone = false,
 } = Astro.props;
 const twins = lang && !standalone;
@@ -49,8 +49,8 @@ const canonical = new URL(Astro.url.pathname, site).href;
     <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
     <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
     <link rel="manifest" href="/site.webmanifest" />
-    <meta name="theme-color" content="#0A1020" media="(prefers-color-scheme: dark)" />
-    <meta name="theme-color" content="#F4F6FA" media="(prefers-color-scheme: light)" />
+    <meta name="theme-color" content="#0E1526" media="(prefers-color-scheme: dark)" />
+    <meta name="theme-color" content="#F5F7FB" media="(prefers-color-scheme: light)" />
     <script is:inline>
       // Before the first paint: apply a saved light or dark choice. No choice follows the system.
       (() => {
@@ -58,7 +58,7 @@ const canonical = new URL(Astro.url.pathname, site).href;
         try { t = localStorage.getItem('theme'); } catch {}
         if (t !== 'light' && t !== 'dark') return;
         document.documentElement.dataset.theme = t;
-        for (const m of document.querySelectorAll('meta[name="theme-color"]')) m.content = t === 'light' ? '#F4F6FA' : '#0A1020';
+        for (const m of document.querySelectorAll('meta[name="theme-color"]')) m.content = t === 'light' ? '#F5F7FB' : '#0E1526';
       })();
     </script>
     <meta property="og:type" content="website" />
@@ -70,8 +70,8 @@ const canonical = new URL(Astro.url.pathname, site).href;
     <meta property="og:title" content={title} />
     <meta property="og:description" content={description} />
     <meta property="og:image" content={`${site}/brand/og.png`} />
-    <meta property="og:image:width" content="1600" />
-    <meta property="og:image:height" content="473" />
+    <meta property="og:image:width" content="1280" />
+    <meta property="og:image:height" content="640" />
     <meta property="og:image:alt" content={ogImageAlt} />
     <meta name="twitter:card" content="summary_large_image" />
     <meta name="twitter:title" content={title} />
