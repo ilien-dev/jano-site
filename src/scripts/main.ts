@@ -1,18 +1,9 @@
-interface Project {
-  slug: string;
-  name: string;
-  tag: string;
-  alt: string;
-  url: string;
-}
-
 const $ = <T extends Element = HTMLElement>(sel: string, root: ParentNode = document) => root.querySelector<T>(sel);
 const $$ = <T extends Element = HTMLElement>(sel: string, root: ParentNode = document) => Array.from(root.querySelectorAll<T>(sel));
 const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 const es = document.documentElement.lang === 'es';
-const T = es
-  ? { copy: 'Copiar', copied: 'Copiado', bannerAlt: 'Banner del README de' }
-  : { copy: 'Copy', copied: 'Copied', bannerAlt: 'README banner' };
+const T = es ? { copy: 'Copiar', copied: 'Copiado' } : { copy: 'Copy', copied: 'Copied' };
+const BG = { light: '#F5F7FB', dark: '#0E1526' };
 
 /* ---------- theme: light, dark or follow the system ---------- */
 type Choice = 'light' | 'dark' | 'system';
@@ -63,10 +54,11 @@ function applyTheme() {
   for (const b of tswBtns) b.setAttribute('aria-checked', String(b.dataset.themeChoice === c));
   for (const m of $$<HTMLMetaElement>('meta[name="theme-color"]')) {
     // With no choice, each meta keeps its own media query; a choice pins both.
-    m.content = c === 'system' ? (m.media.includes('light') ? '#F4F6FA' : '#0A1020') : t === 'light' ? '#F4F6FA' : '#0A1020';
+    m.content = c === 'system' ? (m.media.includes('light') ? BG.light : BG.dark) : BG[t];
   }
-  for (const im of $$<HTMLImageElement>('img[data-banner]')) {
-    const src = `/banners/${im.dataset.banner}/hero-${t}.svg`;
+  // Every README picture has a dark and a light face; show the one that matches the page.
+  for (const im of $$<HTMLImageElement>('img[data-scene]')) {
+    const src = `/scenes/${im.dataset.scene}-${t}.svg`;
     if (!im.src.endsWith(src)) im.src = src;
   }
 }
@@ -85,28 +77,8 @@ for (const b of tswBtns) {
     setMenu(false, true);
   });
 }
-sysLight.addEventListener('change', () => {
-  applyTheme();
-  if (dlg?.open) {
-    mode = resolved();
-    render(false);
-  }
-});
+sysLight.addEventListener('change', applyTheme);
 applyTheme();
-
-/* ---------- wall: load the banners after the page is up ---------- */
-function loadWall() {
-  // Load every tile at once: the copies scroll in from clipped edges, and an
-  // observer would leave them as empty boxes until they were already on screen.
-  for (const img of $$<HTMLImageElement>('.wall img[data-src]')) {
-    img.addEventListener('load', () => img.classList.add('loaded'), { once: true });
-    img.src = img.dataset.src ?? '';
-  }
-}
-const idle = (fn: () => void) =>
-  'requestIdleCallback' in window ? window.requestIdleCallback(fn, { timeout: 2500 }) : window.setTimeout(fn, 800);
-if (document.readyState === 'complete') idle(loadWall);
-else window.addEventListener('load', () => idle(loadWall), { once: true });
 
 /* ---------- copy buttons ---------- */
 for (const btn of $$<HTMLButtonElement>('[data-copy]')) {
@@ -131,11 +103,8 @@ for (const btn of $$<HTMLButtonElement>('[data-copy]')) {
 }
 
 /* ---------- install tabs ---------- */
-const seg = $('#seg');
 const tabs = $$<HTMLButtonElement>('[data-tab-btn]');
 function selectTab(name: string, focus = false) {
-  if (!seg) return;
-  seg.dataset.tab = name;
   for (const t of tabs) {
     const on = t.dataset.tabBtn === name;
     t.setAttribute('aria-selected', String(on));
@@ -159,7 +128,23 @@ for (const t of tabs) {
   });
 }
 
-/* ---------- before / after ---------- */
+/* ---------- the front pages Jano made: one project at a time ---------- */
+const projBtns = $$<HTMLButtonElement>('[data-proj]');
+for (const b of projBtns) {
+  b.addEventListener('click', () => {
+    for (const o of projBtns) {
+      const on = o === b;
+      o.setAttribute('aria-pressed', String(on));
+      const panel = document.getElementById(o.getAttribute('aria-controls') ?? '');
+      if (panel) {
+        panel.dataset.active = String(on);
+        if (on) panel.scrollTop = 0;
+      }
+    }
+  });
+}
+
+/* ---------- before / after: flips by itself until the visitor picks ---------- */
 const ba = $('#ba-root');
 const baBtns = $$<HTMLButtonElement>('[data-ba]');
 let baTouched = false;
@@ -179,97 +164,21 @@ if (ba && !reduced) {
   new IntersectionObserver(([e]) => (visible = e.isIntersecting)).observe(ba);
   window.setInterval(() => {
     if (!baTouched && visible && !document.hidden) setAfter(ba.dataset.after !== 'true');
-  }, 3800);
+  }, 4200);
 }
 
-/* ---------- scroll reveal ---------- */
-const io = new IntersectionObserver(
-  (entries) => {
-    for (const e of entries) {
-      if (e.isIntersecting) {
-        e.target.classList.add('in');
-        io.unobserve(e.target);
+/* ---------- entrance for browsers without scroll-driven animations ---------- */
+if (!CSS.supports('animation-timeline: view()')) {
+  const io = new IntersectionObserver(
+    (entries) => {
+      for (const e of entries) {
+        if (e.isIntersecting) {
+          e.target.classList.add('in');
+          io.unobserve(e.target);
+        }
       }
-    }
-  },
-  { rootMargin: '0px 0px -10% 0px' },
-);
-for (const el of $$('.reveal')) io.observe(el);
-
-/* ---------- lightbox ---------- */
-const projects: Project[] = JSON.parse($('#projects-data')?.textContent ?? '[]');
-const dlg = $<HTMLDialogElement>('#lb');
-const img = $<HTMLImageElement>('#lb-img');
-const body = $('#lb-body');
-const modeSeg = $('#lb-mode');
-const modeBtns = $$<HTMLButtonElement>('[data-mode]');
-let cur = 0;
-let mode: 'dark' | 'light' = 'dark';
-
-function render(animate: boolean) {
-  const p = projects[cur];
-  if (!p || !img) return;
-  img.src = `/banners/${p.slug}/hero-${mode}.svg`;
-  img.alt = es ? `${T.bannerAlt} ${p.name}: ${p.alt}` : `${p.name} ${T.bannerAlt}: ${p.alt}`;
-  $('#lb-title')!.textContent = p.name;
-  $('#lb-tag')!.textContent = p.tag;
-  $('#lb-file')!.textContent = `${p.slug} / hero-${mode}.svg`;
-  $<HTMLAnchorElement>('#lb-link')!.href = p.url;
-  if (modeSeg) modeSeg.dataset.tab = mode;
-  for (const b of modeBtns) b.setAttribute('aria-pressed', String(b.dataset.mode === mode));
-  if (animate && body) {
-    body.classList.remove('lb-swap');
-    void body.offsetWidth;
-    body.classList.add('lb-swap');
-  }
-}
-
-function closeDialog() {
-  if (!dlg?.open) return;
-  if (reduced) return dlg.close();
-  dlg.classList.add('closing');
-  dlg.addEventListener(
-    'animationend',
-    () => {
-      dlg.classList.remove('closing');
-      dlg.close();
     },
-    { once: true },
+    { rootMargin: '0px 0px -10% 0px' },
   );
+  for (const el of $$('.reveal')) io.observe(el);
 }
-
-for (const card of $$<HTMLButtonElement>('[data-open]')) {
-  card.addEventListener('click', () => {
-    cur = Number(card.dataset.open);
-    mode = resolved();
-    render(false);
-    dlg?.showModal();
-  });
-}
-for (const b of $$<HTMLButtonElement>('[data-step]')) {
-  b.addEventListener('click', () => {
-    cur = (cur + Number(b.dataset.step) + projects.length) % projects.length;
-    render(true);
-  });
-}
-for (const b of modeBtns) {
-  b.addEventListener('click', () => {
-    mode = b.dataset.mode === 'light' ? 'light' : 'dark';
-    render(true);
-  });
-}
-$('[data-close]')?.addEventListener('click', closeDialog);
-dlg?.addEventListener('cancel', (e) => {
-  e.preventDefault();
-  closeDialog();
-});
-dlg?.addEventListener('click', (e) => {
-  if (e.target === dlg) closeDialog();
-});
-dlg?.addEventListener('keydown', (e) => {
-  if (e.key === 'ArrowRight' || e.key === 'ArrowLeft') {
-    if ((e.target as HTMLElement).closest('[data-mode]')) return;
-    cur = (cur + (e.key === 'ArrowRight' ? 1 : -1) + projects.length) % projects.length;
-    render(true);
-  }
-});
